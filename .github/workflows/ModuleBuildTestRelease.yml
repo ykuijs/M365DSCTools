@@ -3,13 +3,13 @@ name: Module Build, Test and Release
 on:
   push:
     branches:
-    - main
+      - main
     paths-ignore:
-    - CHANGELOG.md
+      - CHANGELOG.md
     tags:
-    - v*
-    tags-ignore:
-    - '*-*'
+      - v*
+    #tags-ignore:
+    #- '*-*'
 
 env:
   buildFolderName: output
