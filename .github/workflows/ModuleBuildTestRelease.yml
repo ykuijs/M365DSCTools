@@ -102,6 +102,7 @@ jobs:
           MainGitBranch: ${{ env.defaultBranch }}
       - name: Send Changelog PR
         shell: powershell
+        run: './build.ps1 -Tasks Create_ChangeLog_GitHub_PR'
         env:
           GitHubToken: ${{ env.GitHubToken }}
           ReleaseBranch: ${{ env.defaultBranch }}
