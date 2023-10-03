@@ -27,6 +27,7 @@ jobs:
       - name: Calculate ModuleVersion (GitVersion)
         run: |
           dotnet tool install --global GitVersion.Tool
+          dotnet-gitversion
           $gitVersionObject = dotnet-gitversion | ConvertFrom-Json
           $gitVersionObject.PSObject.Properties.ForEach{
               Write-Host -Object "Setting Task Variable '$($_.Name)' with value '$($_.Value)'."
