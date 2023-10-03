@@ -1,0 +1,29 @@
+TOPIC
+    about_M365DSCTools
+
+SHORT DESCRIPTION
+    Various tools for M365DSC deployments
+
+LONG DESCRIPTION
+    Various tools for M365DSC deployments
+
+EXAMPLES
+    PS C:\> Add-ModulesToBlobStorage -ResourceGroupName 'MyResourceGroup' -StorageAccountName 'MyStorageAccount' -ContainerName 'MyContainer'
+
+    PS C:\> Get-ModulesFromBlobStorage -ResourceGroupName 'MyResourceGroup' -StorageAccountName 'MyStorageAccount' -ContainerName 'MyContainer' -Version 1.23.530.1
+
+    PS C:\> Merge-DataFile -Reference $reference -Merge $merge
+
+NOTE:
+    Thank you to all those who contributed to this module, by writing code, sharing opinions, and provided feedback.
+
+TROUBLESHOOTING NOTE:
+    Refer to the Git repository for issues and new releases.
+
+SEE ALSO
+    - https://github.com/ykuijs/M365DSCTools
+    - https://www.powershellgallery.com/packages/M365DSCTools
+    - https://aka.ms/M365DSCWhitepaper
+
+KEYWORDS
+    Microsoft 365, Microsoft365DSC, Tools, whitepaper, DevOps
