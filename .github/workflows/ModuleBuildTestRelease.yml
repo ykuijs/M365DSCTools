@@ -87,7 +87,7 @@ jobs:
     needs:
       - Test_Stage_test_windows_ps
       - Test_Stage_Code_Coverage
-    if: (success() && ((github.ref == 'refs/heads/main') || startsWith(github.ref, 'refs/tags/')) && contains(variables['System.TeamFoundationCollectionUri'], 'MyOrgName'))
+    if: (success() && ((github.ref == 'refs/heads/main') || startsWith(github.ref, 'refs/tags/')) && contains(${{ env.System.TeamFoundationCollectionUri }}, 'MyOrgName'))
     steps:
       - uses: actions/checkout@v2
       - name: Download Build Artifact
