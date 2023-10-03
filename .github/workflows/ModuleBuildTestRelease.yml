@@ -29,10 +29,10 @@ jobs:
           dotnet tool install --global GitVersion.Tool
           $gitVersionObject = dotnet-gitversion | ConvertFrom-Json
           $gitVersionObject.PSObject.Properties.ForEach{
-              Write-Host -Object "Setting Task Variable '${{ env.$_.Name }}' with value '${{ env.$_.Value }}'."
-              Write-Host -Object "##vso[task.setvariable variable=${{ env.$_.Name }};]${{ env.$_.Value }}"
+              Write-Host -Object "Setting Task Variable '$($_.Name)' with value '$($_.Value)'."
+              Write-Host -Object "##vso[task.setvariable variable=$($_.Name);]$($_.Value)"
           }
-          Write-Host -Object "##vso[build.updatebuildnumber]${{ env.$gitVersionObject.FullSemVer }}"
+          Write-Host -Object "##vso[build.updatebuildnumber]$($gitVersionObject.FullSemVer)"
         shell: pwsh
       - name: Build & Package Module
         shell: pwsh
