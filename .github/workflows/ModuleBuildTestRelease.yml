@@ -23,7 +23,9 @@ jobs:
     name: Package Module
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Calculate ModuleVersion (GitVersion)
         run: |
           git fetch --unshallow --all
