@@ -35,7 +35,8 @@ jobs:
           Write-Host -Object "##vso[build.updatebuildnumber]${{ env.$gitVersionObject.FullSemVer }}"
         shell: pwsh
       - name: Build & Package Module
-        shell: powershell
+        shell: pwsh
+        run: './build.ps1 -ResolveDependency -Tasks Pack'
         env:
           ModuleVersion: ${{ env.NuGetVersionV2 }}
       - name: Publish Build Artifact
@@ -54,30 +55,31 @@ jobs:
         uses: actions/download-artifact@v2
       - name: Run Tests
         shell: powershell
+        run: './build.ps1 -Tasks Test'
       - name: Publish Test Artifact
         uses: actions/upload-artifact@v2
         with:
           path: ${{ env.buildFolderName }}/${{ env.testResultFolderName }}/
           name: CodeCoverageWinPS51
 
-  Test_Stage_Code_Coverage:
-    name: Publish Code Coverage
-    runs-on: ubuntu-latest
-    needs:
-      - Build_Stage_Package_Module
-      - Test_Stage_test_windows_ps
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set Environment Variables
-        run: |
-          $repositoryOwner,$repositoryName = $env:BUILD_REPOSITORY_NAME -split '/'
-          echo "##vso[task.setvariable variable=RepositoryOwner;isOutput=true]$repositoryOwner"
-          echo "##vso[task.setvariable variable=RepositoryName;isOutput=true]$repositoryName"
-        shell: pwsh
-      - name: Download Pipeline Artifact
-        uses: actions/download-artifact@v2
-      - name: Download Test Artifact Windows (PS 5.1)
-        uses: actions/download-artifact@v2
+  # Test_Stage_Code_Coverage:
+  #   name: Publish Code Coverage
+  #   runs-on: ubuntu-latest
+  #   needs:
+  #     - Build_Stage_Package_Module
+  #     - Test_Stage_test_windows_ps
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Set Environment Variables
+  #       run: |
+  #         $repositoryOwner,$repositoryName = $env:BUILD_REPOSITORY_NAME -split '/'
+  #         echo "##vso[task.setvariable variable=RepositoryOwner;isOutput=true]$repositoryOwner"
+  #         echo "##vso[task.setvariable variable=RepositoryName;isOutput=true]$repositoryName"
+  #       shell: pwsh
+  #     - name: Download Pipeline Artifact
+  #       uses: actions/download-artifact@v2
+  #     - name: Download Test Artifact Windows (PS 5.1)
+  #       uses: actions/download-artifact@v2
 
   Deploy_Stage_Deploy_Module:
     name: Deploy Module
@@ -92,6 +94,7 @@ jobs:
         uses: actions/download-artifact@v2
       - name: Publish Release
         shell: powershell
+        run: './build.ps1 -Tasks Publish'
         env:
           GitHubToken: ${{ env.GitHubToken }}
           GalleryApiToken: ${{ env.GalleryApiToken }}
