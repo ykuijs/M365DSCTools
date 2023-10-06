@@ -10,6 +10,7 @@ on:
       - v*
     #tags-ignore:
     #- '*-*'
+  pull_request:
 
 env:
   buildFolderName: output
