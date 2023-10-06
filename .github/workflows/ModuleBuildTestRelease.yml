@@ -37,7 +37,7 @@ jobs:
               Write-Host -Object "##vso[task.setvariable variable=$($_.Name);]$($_.Value)"
           }
           Write-Host -Object "##vso[build.updatebuildnumber]$($gitVersionObject.FullSemVer)"
-          Write-Host ::set-output name=GitVersion::$($gitVersionObject)
+          Write-Output "NuGetVersionV2=$($gitVersionObject.NuGetVersionV2)" >> $env:GITHUB_OUTPUT
         shell: pwsh
       - name: Build & Package Module
         shell: pwsh
@@ -45,7 +45,7 @@ jobs:
           Write-Host "ModuleVersion: $ModuleVersion"
           ./build.ps1 -ResolveDependency -Tasks Pack
         env:
-          ModuleVersion: ${{ steps.GitVersion.outputs.GitVersion.NuGetVersionV2 }}
+          ModuleVersion: ${{ steps.GitVersion.outputs.NuGetVersionV2 }}
       - name: Publish Build Artifact
         uses: actions/upload-artifact@v2
         with:
