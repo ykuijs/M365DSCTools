@@ -42,7 +42,7 @@ jobs:
       - name: Publish Build Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.buildArtifactName }}/
+          name: ${{ env.buildArtifactName }}
           path: ${{ env.buildFolderName }}/
 
   Test_Stage_test_windows_ps:
@@ -55,7 +55,7 @@ jobs:
       - name: Download Build Artifact
         uses: actions/download-artifact@v3
         with:
-          name: ${{ env.buildArtifactName }}/
+          name: ${{ env.buildArtifactName }}
           path: ${{ env.buildFolderName }}/
       - name: Run Tests
         shell: powershell
