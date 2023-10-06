@@ -42,7 +42,7 @@ jobs:
       - name: Build & Package Module
         shell: pwsh
         run: |
-          Write-Host "ModuleVersion: $ModuleVersion"
+          gci env:
           ./build.ps1 -ResolveDependency -Tasks Pack
         env:
           ModuleVersion: ${{ steps.GitVersion.outputs.NuGetVersionV2 }}
