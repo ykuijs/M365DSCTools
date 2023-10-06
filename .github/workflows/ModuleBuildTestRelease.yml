@@ -52,6 +52,8 @@ jobs:
       - Build_Stage_Package_Module
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Download Build Artifact
         uses: actions/download-artifact@v3
         with:
@@ -94,6 +96,8 @@ jobs:
     if: (success() && ((github.ref == 'refs/heads/main') || startsWith(github.ref, 'refs/tags/')) && (contains(github.repository_owner, 'ykuijs')))
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Download Build Artifact
         uses: actions/download-artifact@v3
         with:
