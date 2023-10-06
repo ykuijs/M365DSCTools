@@ -91,7 +91,7 @@ jobs:
     needs:
       - Test_Stage_test_windows_ps
       #- Test_Stage_Code_Coverage
-    if: (success() && ((github.ref == 'refs/heads/main') || startsWith(github.ref, 'refs/tags/')))
+    if: (success() && ((github.ref == 'refs/heads/main') || startsWith(github.ref, 'refs/tags/')) && (contains(github.repository_owner, 'ykuijs')))
     steps:
       - uses: actions/checkout@v4
       - name: Download Build Artifact
@@ -100,7 +100,7 @@ jobs:
           name: ${{ env.buildArtifactName }}
           path: ${{ env.buildFolderName }}/
       - name: Publish Release
-        shell: powershell
+        shell: pwsh
         run: |
           Get-ChildItem
           ./build.ps1 -Tasks Publish
@@ -110,7 +110,7 @@ jobs:
           ReleaseBranch: ${{ env.defaultBranch }}
           MainGitBranch: ${{ env.defaultBranch }}
       - name: Send Changelog PR
-        shell: powershell
+        shell: pwsh
         run: './build.ps1 -Tasks Create_ChangeLog_GitHub_PR'
         env:
           GitHubToken: ${{ secrets.GITHUB_TOKEN }}
