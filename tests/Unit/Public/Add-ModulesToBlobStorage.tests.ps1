@@ -15,8 +15,8 @@ BeforeAll {
     $PSDefaultParameterValues['Mock:ModuleName'] = $script:moduleName
     $PSDefaultParameterValues['Should:ModuleName'] = $script:moduleName
 
-    $stubPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Stubs\AzStorageStubs.ps1' -Resolve
-    . $stubPath
+    $stubPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Stubs\AzStorageStubs.psm1' -Resolve
+    Import-Module $stubPath
 }
 
 AfterAll {

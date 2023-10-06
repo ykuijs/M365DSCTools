@@ -238,7 +238,7 @@ function New-AzDataLakeGen2ItemAclObject
         [Parameter(Mandatory = $true, HelpMessage = 'There are four types: "user" grants rights to the owner or a named user, "group" grants rights to the owning group or a named group, "mask" restricts rights granted to named users and the members of groups, and "other" grants rights to all users not found in any of the other entries.')]
         [ValidateNotNullOrEmpty()]
         [ValidateSet('User', 'Group', 'Mask', 'Other')]
-        [Azure.Storage.Files.DataLake.Models.AccessControlType]
+        [System.Object]
         ${AccessControlType})
 
 
@@ -305,7 +305,7 @@ function Start-CopyAzureStorageBlob
         [Parameter(ParameterSetName = 'BlobInstance', ValueFromPipelineByPropertyName = $true, HelpMessage = 'BlobBaseClient Object')]
         [Parameter(ParameterSetName = 'BlobInstanceToBlobInstance', ValueFromPipelineByPropertyName = $true, HelpMessage = 'BlobBaseClient Object')]
         [ValidateNotNull()]
-        [Azure.Storage.Blobs.Specialized.BlobBaseClient]
+        [System.Object]
         ${BlobBaseClient},
 
         [Parameter(ParameterSetName = 'ContainerInstance', Mandatory = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'CloudBlobContainer Object')]
@@ -897,7 +897,7 @@ function Copy-AzStorageBlob
     param(
         [Parameter(ParameterSetName = 'BlobInstance', ValueFromPipelineByPropertyName = $true, HelpMessage = 'BlobBaseClient Object')]
         [ValidateNotNull()]
-        [Azure.Storage.Blobs.Specialized.BlobBaseClient]
+        [System.Object]
         ${BlobBaseClient},
 
         [Parameter(ParameterSetName = 'ContainerName', Mandatory = $true, Position = 0, HelpMessage = 'Blob name')]
@@ -2079,36 +2079,6 @@ function Get-AzStorageAccount
         [object]
         ${DefaultProfile})
 
-
-    dynamicparam
-    {
-        try
-        {
-            $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('Az.Storage\Get-AzStorageAccount', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-            $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-            if ($dynamicParams.Length -gt 0)
-            {
-                $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-                foreach ($param in $dynamicParams)
-                {
-                    $param = $param.Value
-
-                    if (-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                    {
-                        $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                        $paramDictionary.Add($param.Name, $dynParam)
-                    }
-                }
-                return $paramDictionary
-            }
-        }
-        catch
-        {
-            throw
-        }
-    }
-
-
 }
 
 
@@ -2495,7 +2465,7 @@ function Get-AzStorageBlobContent
 
         [Parameter(ParameterSetName = 'BlobPipeline', ValueFromPipelineByPropertyName = $true, HelpMessage = 'BlobBaseClient Object')]
         [ValidateNotNull()]
-        [Azure.Storage.Blobs.Specialized.BlobBaseClient]
+        [System.Object]
         ${BlobBaseClient},
 
         [Parameter(ParameterSetName = 'ContainerPipeline', Mandatory = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'Azure Container Object')]
@@ -2695,11 +2665,11 @@ function Get-AzStorageBlobQueryResult
     param(
         [Parameter(ParameterSetName = 'BlobPipeline', Mandatory = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'BlobBaseClient Object')]
         [ValidateNotNull()]
-        [Azure.Storage.Blobs.Specialized.BlobBaseClient]
+        [System.Object]
         ${BlobBaseClient},
 
         [Parameter(ParameterSetName = 'ContainerPipeline', Mandatory = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'BlobContainerClient Object')]
-        [Azure.Storage.Blobs.BlobContainerClient]
+        [System.Object]
         ${BlobContainerClient},
 
         [Parameter(ParameterSetName = 'ContainerPipeline', Mandatory = $true, Position = 0, HelpMessage = 'Blob name')]
@@ -2855,7 +2825,7 @@ function Get-AzStorageBlobTag
     param(
         [Parameter(ParameterSetName = 'BlobPipeline', Mandatory = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'BlobBaseClient Object')]
         [ValidateNotNull()]
-        [Azure.Storage.Blobs.Specialized.BlobBaseClient]
+        [System.Object]
         ${BlobBaseClient},
 
         [Parameter(ParameterSetName = 'ContainerPipeline', Mandatory = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'CloudBlobContainer Object')]
@@ -4432,7 +4402,7 @@ function New-AzDataLakeGen2SasToken
 
         [Parameter(HelpMessage = 'Protocol can be used in the request with this SAS token.')]
         [ValidateNotNull()]
-        [System.Nullable[Azure.Storage.Sas.SasProtocol]]
+        [System.Nullable[System.Object]]
         ${Protocol},
 
         [Parameter(HelpMessage = 'IP, or IP range ACL (access control list) that the request would be accepted by Azure Storage.')]
@@ -5485,7 +5455,7 @@ function New-AzStorageBlobSASToken
         [Parameter(ParameterSetName = 'BlobPipelineWithPolicy', ValueFromPipelineByPropertyName = $true, HelpMessage = 'BlobBaseClient Object')]
         [Parameter(ParameterSetName = 'BlobPipelineWithPermission', ValueFromPipelineByPropertyName = $true, HelpMessage = 'BlobBaseClient Object')]
         [ValidateNotNull()]
-        [Azure.Storage.Blobs.Specialized.BlobBaseClient]
+        [System.Object]
         ${BlobBaseClient},
 
         [Parameter(ParameterSetName = 'BlobNameWithPermission', Mandatory = $true, Position = 0, HelpMessage = 'Container Name')]
@@ -7370,7 +7340,7 @@ function Remove-AzStorageBlob
 
         [Parameter(ParameterSetName = 'BlobPipeline', ValueFromPipelineByPropertyName = $true, HelpMessage = 'BlobBaseClient Object')]
         [ValidateNotNull()]
-        [Azure.Storage.Blobs.Specialized.BlobBaseClient]
+        [System.Object]
         ${BlobBaseClient},
 
         [Parameter(ParameterSetName = 'ContainerPipeline', Mandatory = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'CloudBlobContainer Object')]
@@ -7451,7 +7421,7 @@ function Remove-AzStorageBlobImmutabilityPolicy
     param(
         [Parameter(ParameterSetName = 'BlobPipeline', Mandatory = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'BlobBaseClient Object')]
         [ValidateNotNull()]
-        [Azure.Storage.Blobs.Specialized.BlobBaseClient]
+        [System.Object]
         ${BlobBaseClient},
 
         [Parameter(ParameterSetName = 'NamePipeline', Mandatory = $true, Position = 0, HelpMessage = 'Blob name')]
@@ -8053,7 +8023,7 @@ function Remove-AzStorageShare
 
         [Parameter(ParameterSetName = 'Share', Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'File share Client to be removed.')]
         [ValidateNotNull()]
-        [Azure.Storage.Files.Shares.ShareClient]
+        [System.Object]
         ${ShareClient},
 
         [Parameter(HelpMessage = 'Remove File Share with all of its snapshots')]
@@ -8222,11 +8192,11 @@ function Rename-AzStorageDirectory
 
         [Parameter(ParameterSetName = 'ShareObject', Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'ShareClienr indicated the share where the directory would be listed.')]
         [ValidateNotNull()]
-        [Azure.Storage.Files.Shares.ShareClient]
+        [System.Object]
         ${ShareClient},
 
         [Parameter(ParameterSetName = 'DirecotryObject', Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'Source directory instance')]
-        [Azure.Storage.Files.Shares.ShareDirectoryClient]
+        [System.Object]
         ${ShareDirectoryClient},
 
         [Parameter(ParameterSetName = 'ShareName', Mandatory = $true, Position = 1, HelpMessage = 'Path to an existing directory.')]
@@ -8281,17 +8251,17 @@ function Rename-AzStorageFile
 
         [Parameter(ParameterSetName = 'FileObject', Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'Source file instance')]
         [ValidateNotNull()]
-        [Azure.Storage.Files.Shares.ShareFileClient]
+        [System.Object]
         ${ShareFileClient},
 
         [Parameter(ParameterSetName = 'ShareObject', Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'ShareClient indicated the share where the file would be listed.')]
         [ValidateNotNull()]
-        [Azure.Storage.Files.Shares.ShareClient]
+        [System.Object]
         ${ShareClient},
 
         [Parameter(ParameterSetName = 'DirecotryObject', Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'ShareDirectoryClient indicated the share where the file would be listed.')]
         [ValidateNotNull()]
-        [Azure.Storage.Files.Shares.ShareDirectoryClient]
+        [System.Object]
         ${ShareDirectoryClient},
 
         [Parameter(ParameterSetName = 'ShareName', Mandatory = $true, Position = 1, HelpMessage = 'Path to an existing file.')]
@@ -8772,7 +8742,7 @@ function Set-AzDataLakeGen2ItemAclObject
         [Parameter(Mandatory = $true, HelpMessage = 'There are four types: "user" grants rights to the owner or a named user, "group" grants rights to the owning group or a named group, "mask" restricts rights granted to named users and the members of groups, and "other" grants rights to all users not found in any of the other entries.')]
         [ValidateNotNullOrEmpty()]
         [ValidateSet('User', 'Group', 'Mask', 'Other')]
-        [Azure.Storage.Files.DataLake.Models.AccessControlType]
+        [System.Object]
         ${AccessControlType})
 
 
@@ -9384,7 +9354,7 @@ function Set-AzStorageBlobImmutabilityPolicy
     param(
         [Parameter(ParameterSetName = 'BlobPipeline', Mandatory = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'BlobBaseClient Object')]
         [ValidateNotNull()]
-        [Azure.Storage.Blobs.Specialized.BlobBaseClient]
+        [System.Object]
         ${BlobBaseClient},
 
         [Parameter(ParameterSetName = 'NamePipeline', Mandatory = $true, Position = 0, HelpMessage = 'Blob name')]
@@ -9534,7 +9504,7 @@ function Set-AzStorageBlobLegalHold
         [Parameter(ParameterSetName = 'BlobPipelineEnable', Mandatory = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'BlobBaseClient Object')]
         [Parameter(ParameterSetName = 'BlobPipelineDisable', Mandatory = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'BlobBaseClient Object')]
         [ValidateNotNull()]
-        [Azure.Storage.Blobs.Specialized.BlobBaseClient]
+        [System.Object]
         ${BlobBaseClient},
 
         [Parameter(ParameterSetName = 'NamePipelineEnable', Mandatory = $true, Position = 0, HelpMessage = 'Blob name')]
@@ -9598,7 +9568,7 @@ function Set-AzStorageBlobTag
     param(
         [Parameter(ParameterSetName = 'BlobPipeline', Mandatory = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'BlobBaseClient Object')]
         [ValidateNotNull()]
-        [Azure.Storage.Blobs.Specialized.BlobBaseClient]
+        [System.Object]
         ${BlobBaseClient},
 
         [Parameter(ParameterSetName = 'ContainerPipeline', Mandatory = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'CloudBlobContainer Object')]
@@ -10399,7 +10369,7 @@ function Start-AzStorageBlobCopy
         [Parameter(ParameterSetName = 'BlobInstance', ValueFromPipelineByPropertyName = $true, HelpMessage = 'BlobBaseClient Object')]
         [Parameter(ParameterSetName = 'BlobInstanceToBlobInstance', ValueFromPipelineByPropertyName = $true, HelpMessage = 'BlobBaseClient Object')]
         [ValidateNotNull()]
-        [Azure.Storage.Blobs.Specialized.BlobBaseClient]
+        [System.Object]
         ${BlobBaseClient},
 
         [Parameter(ParameterSetName = 'ContainerInstance', Mandatory = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'CloudBlobContainer Object')]
@@ -11690,7 +11660,4 @@ function Update-AzStorageServiceProperty
 
 
 }
-
-
-
 
