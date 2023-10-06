@@ -42,10 +42,6 @@ Describe Add-ModulesToBlobStorage {
             }
         }
 
-        Get-Module -ListAvailable PowerShellGet
-
-        Get-Command Save-Module
-
         Mock -CommandName Save-Module -MockWith { }
     }
 
