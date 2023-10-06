@@ -101,7 +101,9 @@ jobs:
           path: ${{ env.buildFolderName }}/
       - name: Publish Release
         shell: powershell
-        run: './build.ps1 -Tasks Publish'
+        run: |
+          Get-ChildItem
+          ./build.ps1 -Tasks Publish
         env:
           GitHubToken: ${{ secrets.GITHUB_TOKEN }}
           GalleryApiToken: ${{ secrets.GalleryApiToken }}
