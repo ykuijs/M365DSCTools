@@ -41,6 +41,11 @@ Describe Add-ModulesToBlobStorage {
                 Version = '1.23.517.1'
             }
         }
+
+        Get-Module -ListAvailable PowerShellGet
+
+        Get-Command Save-Module
+
         Mock -CommandName Save-Module -MockWith { }
     }
 
