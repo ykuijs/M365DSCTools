@@ -6,18 +6,7 @@
 BuiltModuleSubdirectory: module
 CopyPaths:
   - en-US
-#  - DSCResources
-  # - Modules
 Encoding: UTF8
-# Can be used to manually specify module's semantic version if the preferred method of
-# using GitVersion is not available, and it is not possible to set the session environment
-# variable `$env:ModuleVersion`, nor setting the variable `$ModuleVersion`, in the
-# PowerShell session (parent scope) before running the task `build`.
-#SemVer: '99.0.0-preview1'
-
-# Suffix to add to Root module PSM1 after merge (here, the Set-Alias exporting IB tasks)
-# suffix: suffix.ps1
-# prefix: prefix.ps1
 VersionedOutputDirectory: true
 
 ####################################################
@@ -140,8 +129,9 @@ TaskHeader: |
   Write-Build DarkGray "  $($Task.InvocationInfo.ScriptName):$($Task.InvocationInfo.ScriptLineNumber)"
   ""
 
-
-
-
-
-
+GitHubConfig:
+  GitHubFilesToAdd:
+    - 'CHANGELOG.md'
+  GitHubConfigUserName: Yorick Kuijs
+  GitHubConfigUserEmail: ykuijs@hotmail.com
+  UpdateChangelogOnPrerelease: false
