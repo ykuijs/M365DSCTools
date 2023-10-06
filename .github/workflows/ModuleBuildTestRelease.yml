@@ -91,23 +91,26 @@ jobs:
     needs:
       - Test_Stage_test_windows_ps
       #- Test_Stage_Code_Coverage
-    if: (success() && ((github.ref == 'refs/heads/main') || startsWith(github.ref, 'refs/tags/')) && contains(vars.System.TeamFoundationCollectionUri, 'MyOrgName'))
+    if: (success() && ((github.ref == 'refs/heads/main') || startsWith(github.ref, 'refs/tags/')))
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Download Build Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.buildArtifactName }}
+          path: ${{ env.buildFolderName }}/
       - name: Publish Release
         shell: powershell
         run: './build.ps1 -Tasks Publish'
         env:
-          GitHubToken: ${{ env.GitHubToken }}
-          GalleryApiToken: ${{ env.GalleryApiToken }}
+          GitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          GalleryApiToken: ${{ secrets.GalleryApiToken }}
           ReleaseBranch: ${{ env.defaultBranch }}
           MainGitBranch: ${{ env.defaultBranch }}
       - name: Send Changelog PR
         shell: powershell
         run: './build.ps1 -Tasks Create_ChangeLog_GitHub_PR'
         env:
-          GitHubToken: ${{ env.GitHubToken }}
+          GitHubToken: ${{ secrets.GITHUB_TOKEN }}
           ReleaseBranch: ${{ env.defaultBranch }}
           MainGitBranch: ${{ env.defaultBranch }}

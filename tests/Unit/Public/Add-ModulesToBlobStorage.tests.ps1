@@ -42,6 +42,8 @@ Describe Add-ModulesToBlobStorage {
             }
         }
 
+        Get-Command Save-Module
+
         Mock -CommandName Save-Module -MockWith { }
     }
 
