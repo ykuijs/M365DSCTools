@@ -31,7 +31,7 @@ NestedModule:
 #    OutputDirectory: ///Modules/HelperSubmodule
 #    VersionedOutputDirectory: false
 #    AddToManifest: false
-#    SemVer: 
+#    SemVer:
 #    # suffix:
 #    # prefix:
 
@@ -73,9 +73,8 @@ BuildWorkflow:
     #- Merge_CodeCoverage_Files
 
   publish:
-    - publish_module_to_gallery
-
-
+    - Publish_Release_To_GitHub
+    - Publish_Module_To_Gallery
 
 
 ####################################################
