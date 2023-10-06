@@ -27,8 +27,8 @@ jobs:
         with:
           fetch-depth: 0
       - name: Calculate ModuleVersion (GitVersion)
+        id: GitVersion
         run: |
-          git fetch --unshallow --all
           dotnet tool install --global GitVersion.Tool
           dotnet-gitversion
           $gitVersionObject = dotnet-gitversion | ConvertFrom-Json
@@ -37,12 +37,15 @@ jobs:
               Write-Host -Object "##vso[task.setvariable variable=$($_.Name);]$($_.Value)"
           }
           Write-Host -Object "##vso[build.updatebuildnumber]$($gitVersionObject.FullSemVer)"
+          Write-Host ::set-output name=GitVersion::$($gitVersionObject)
         shell: pwsh
       - name: Build & Package Module
         shell: pwsh
-        run: './build.ps1 -ResolveDependency -Tasks Pack'
+        run: |
+          Write-Host "ModuleVersion: $ModuleVersion"
+          ./build.ps1 -ResolveDependency -Tasks Pack
         env:
-          ModuleVersion: ${{ env.NuGetVersionV2 }}
+          ModuleVersion: ${{ steps.GitVersion.outputs.GitVersion.NuGetVersionV2 }}
       - name: Publish Build Artifact
         uses: actions/upload-artifact@v2
         with:
