@@ -45,6 +45,7 @@ function Merge-Array
                 $refItem = $Reference | Where-Object -FilterScript {
                     ($_.ContainsKey('UniqueId') -and $_.UniqueId -eq $item.UniqueId) -or `
                     ($_.ContainsKey('Identity') -and $_.Identity -eq $item.Identity) -or `
+                    ($_.ContainsKey('Id') -and $_.Identity -eq $item.Id) -or `
                     ($_.ContainsKey('NodeName') -and $_.NodeName -eq $item.NodeName)
                 }
 
