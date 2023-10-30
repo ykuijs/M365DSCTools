@@ -41,7 +41,7 @@ function Add-ModulesToBlobStorage
         $ContainerName
     )
 
-    Write-LogEntry -Message 'Upload dependencies to storage container'
+    Write-LogEntry -Message 'Upload Microsoft365DSC module dependencies to storage container'
 
     Write-LogEntry -Message "Connecting to storage account '$StorageAccountName'" -Level 1
     $storageAcc = Get-AzStorageAccount -ResourceGroupName $ResourceGroupName -Name $StorageAccountName
@@ -50,7 +50,7 @@ function Add-ModulesToBlobStorage
     $context = $storageAcc.Context
 
     Write-LogEntry -Message 'Checking dependencies'
-    $m365Module = Get-Module Microsoft365Dsc -ListAvailable
+    $m365Module = Get-Module -Name Microsoft365DSC -ListAvailable | Sort-Object -Property Version -Descending | Select-Object -First 1
     $modulePath = Split-Path -Path $m365Module.Path -Parent
 
     $versionString = $m365Module.Version.ToString() -replace '\.', '_'
@@ -67,10 +67,13 @@ function Add-ModulesToBlobStorage
             $null = New-Item -Path $savePath -ItemType 'Directory'
         }
 
+        Write-LogEntry -Message ('Saving module {0} (v{1})' -f $m365Module.Name, $m365Module.Version.ToString()) -Level 1
+        Save-Module -Name $m365Module.Name -RequiredVersion $m365Module.Version.ToString() -Path $savePath
+
         $data = Import-PowerShellDataFile -Path $dependenciesPath
         foreach ($dependency in $data.Dependencies)
         {
-            Write-LogEntry -Message ('Saving {0} (v{1})' -f $dependency.ModuleName, $dependency.RequiredVersion) -Level 1
+            Write-LogEntry -Message ('Saving module {0} (v{1})' -f $dependency.ModuleName, $dependency.RequiredVersion) -Level 1
             Save-Module -Name $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Path $savePath
         }
 

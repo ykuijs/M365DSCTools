@@ -4,7 +4,7 @@
 
  .Description
   This function merges two PowerShell Data file hashtables into one new
-  one. The values in the Merrge hashtable are overwriting any existing
+  one. The values in the Merge hashtable are overwriting any existing
   values in the Reference hashtable.
 
  .Parameter Reference

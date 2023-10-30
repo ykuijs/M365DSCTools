@@ -1,23 +1,23 @@
 <#
  .Synopsis
-  Downloads all Microsoft365DSC dependencies and uploads these to an Azure Blob Storage
+  Downloads all Microsoft365DSC dependencies from an Azure Blob Storage
 
  .Description
-  This function checks which dependencies the used version of Microsoft365DSC
-  requires and downloads these from the PowerShell Gallery. The dependencies
-  are then packaged into a zip file and uploaded to an Azure Blob Storage.
+  This function downloads the zipped dependency modules corresponding to the
+  required Microsoft365DSC version from an Azure Blob Storage, if available.
+  The dependencies are then unzipped and copied to the PowerShell Modules folder.
 
  .Parameter ResourceGroupName
   The Azure Resource Group Name where the Storage Account is located
 
  .Parameter StorageAccountName
-  The name of the Storage Account where the zip file will be uploaded to
+  The name of the Storage Account where the zip file will be downloaded from
 
   .Parameter ContainerName
-  The name of the Container where the zip file will be uploaded to
+  The name of the Container where the zip file will be downloaded from
 
   .Parameter Version
-  The version of Microsoft365DSC for which the prerequisites should be retrieved
+  The version of the Microsoft365DSC module for which the prerequisites should be retrieved
 
   .Example
    Get-ModulesFromBlobStorage -ResourceGroupName 'MyResourceGroup' -StorageAccountName 'MyStorageAccount' -ContainerName 'MyContainer' -Version 1.23.530.1
@@ -44,7 +44,7 @@ function Get-ModulesFromBlobStorage
         $Version
     )
 
-    Write-LogEntry -Message "Download dependencies from storage container. M365DSC Version $Version." -Level 2
+    Write-LogEntry -Message "Download dependencies from storage container. Microsoft365DSC version $Version." -Level 2
 
     Write-LogEntry -Message "Connecting to storage account '$StorageAccountName'" -Level 3
     $storageAcc = Get-AzStorageAccount -ResourceGroupName $ResourceGroupName -Name $StorageAccountName
@@ -61,7 +61,7 @@ function Get-ModulesFromBlobStorage
     }
 
     Write-LogEntry -Message 'Downloading the blob contents from the container' -Level 2
-    $prefix = 'M365DSCDependencies-' + ($version -replace '\.', '_')
+    $prefix = 'M365DSCDependencies-' + ($Version -replace '\.', '_')
     $blobContent = Get-AzStorageBlob -Container $ContainerName -Context $context -Prefix $prefix
 
     if ($null -eq $blobContent)
@@ -88,8 +88,20 @@ function Get-ModulesFromBlobStorage
         }
         Expand-Archive -Path $downloadFile -DestinationPath $extractPath
 
-        Write-LogEntry -Message "Copying folders in $extractPath to 'C:\Program Files\WindowsPowerShell\Modules'" -Level 2
-        Copy-Item -Path "$extractPath\*" -Destination 'C:\Program Files\WindowsPowerShell\Modules' -Recurse -Container -Force
+        Write-LogEntry -Message "Copying modules in $extractPath to 'C:\Program Files\WindowsPowerShell\Modules'" -Level 2
+        $downloadedModules = Get-ChildItem -Path $extractPath -Directory -ErrorAction SilentlyContinue
+        foreach ($module in $downloadedModules) {
+            $PSModulePath = Join-Path -Path "$($env:ProgramFiles)/WindowsPowerShell/Modules" -ChildPath $module.Name
+            if (Test-Path -Path $PSModulePath) {
+                Write-Log "Removing existing module $($module.Name)" -Level 3
+                Remove-Item -Include "*" -Path $PSModulePath -Recurse -Force
+            }
+
+            Write-Log "Deploying module $($module.Name)" -Level 3
+            $modulePath = Join-Path -Path $extractPath -ChildPath $module.Name
+            $PSModulesPath = Join-Path -Path "$($env:ProgramFiles)/WindowsPowerShell" -ChildPath "Modules"
+            Copy-Item -Path $modulePath -Destination $PSModulesPath -Recurse -Container -Force
+        }
 
         Write-LogEntry -Message 'Removing temporary components' -Level 2
         Remove-Item -Path $extractPath -Recurse -Confirm:$false
