@@ -95,17 +95,18 @@ PrivateData = @{
     PSData = @{
 
         Prerelease = ''
+
         # Tags applied to this module. These help with module discovery in online galleries.
-        # Tags = @()
+        Tags         = 'DesiredStateConfiguration', 'DSC', 'M365DSC', 'Microsoft365'
 
         # A URL to the license for this module.
-        # LicenseUri = ''
+        LicenseUri = 'https://github.com/ykuijs/M365DSCTools/blob/main/LICENSE'
 
         # A URL to the main website for this project.
-        # ProjectUri = ''
+        ProjectUri = 'https://github.com/ykuijs/M365DSCTools'
 
         # A URL to an icon representing this module.
-        # IconUri = ''
+        IconUri = 'https://github.com/microsoft/Microsoft365DSC/blob/Dev/Modules/Microsoft365DSC/Dependencies/Images/Logo.png?raw=true'
 
         # ReleaseNotes of this module
         ReleaseNotes = ''
