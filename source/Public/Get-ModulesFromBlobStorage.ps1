@@ -44,67 +44,76 @@ function Get-ModulesFromBlobStorage
         $Version
     )
 
-    Write-LogEntry -Message "Download dependencies from storage container. Microsoft365DSC version $Version." -Level 2
+    $script:level++
+    Write-LogEntry -Message "Download dependencies from storage container for Microsoft365DSC v$Version." -Level $script:level
 
-    Write-LogEntry -Message "Connecting to storage account '$StorageAccountName'" -Level 3
+    $script:level++
+    Write-LogEntry -Message "Connecting to storage account '$StorageAccountName'" -Level $script:level
     $storageAcc = Get-AzStorageAccount -ResourceGroupName $ResourceGroupName -Name $StorageAccountName
 
-    Write-LogEntry -Message 'Retrieving storage account context' -Level 3
+    Write-LogEntry -Message 'Retrieving storage account context' -Level $script:level
     $context = $storageAcc.Context
 
-    Write-LogEntry -Message 'Checking download folder existence' -Level 3
+    Write-LogEntry -Message 'Checking download folder existence' -Level $script:level
     $destination = Join-Path -Path $env:TEMP -ChildPath 'M365DSCModules'
-    if ((Test-Path -Path $destination) -eq $false)
-    {
-        Write-LogEntry -Message "Creating destination folder: '$destination'" -Level 4
+    if ((Test-Path -Path $destination) -eq $false) {
+        $script:level++
+        Write-LogEntry -Message "Creating destination folder: '$destination'" -Level $script:level
         $null = New-Item -ItemType Directory -Path $destination
+        $script:level--
     }
 
-    Write-LogEntry -Message 'Downloading the blob contents from the container' -Level 2
+    Write-LogEntry -Message 'Downloading blob contents from the container' -Level $script:level
     $prefix = 'M365DSCDependencies-' + ($Version -replace '\.', '_')
     $blobContent = Get-AzStorageBlob -Container $ContainerName -Context $context -Prefix $prefix
 
-    if ($null -eq $blobContent)
-    {
-        Write-LogEntry -Message "[ERROR] No files found that match the pattern: '$prefix'" -Level 2
+    $script:level++
+    if ($null -eq $blobContent) {
+        Write-LogEntry -Message "[ERROR] No files found that match the pattern: '$prefix'" -Level $script:level
     }
-    else
-    {
-        Write-LogEntry -Message "Downloading $($blobContent.Name) to $destination" -Level 3
+    else {
+        Write-LogEntry -Message "Downloading $($blobContent.Name) to $destination" -Level $script:level
         $downloadFile = Join-Path -Path $destination -ChildPath $blobContent.Name
-        if (Test-Path -Path $downloadFile)
-        {
-            Write-LogEntry -Message "$downloadFile already exists. Removing!" -Level 3
+        if (Test-Path -Path $downloadFile) {
+            $script:level++
+            Write-LogEntry -Message "$downloadFile already exists. Removing!" -Level $script:level
             Remove-Item -Path $downloadFile -Confirm:$false
+            $script:level--
         }
         $null = Get-AzStorageBlobContent -Container $ContainerName -Context $context -Blob $blobContent.Name -Destination $destination -Force
 
-        Write-LogEntry -Message "Extracting $($blobContent.Name)" -Level 2
+        Write-LogEntry -Message "Extracting $($blobContent.Name)" -Level $script:level
         $extractPath = Join-Path -Path $destination -ChildPath $Version.ToString()
-        if (Test-Path -Path $extractPath)
-        {
-            Write-LogEntry -Message "$extractPath already exists. Removing!" -Level 3
+        if (Test-Path -Path $extractPath) {
+            $script:level++
+            Write-LogEntry -Message "$extractPath already exists. Removing!" -Level $script:level
             Remove-Item -Path $extractPath -Recurse -Confirm:$false
+            $script:level--
         }
         Expand-Archive -Path $downloadFile -DestinationPath $extractPath
 
-        Write-LogEntry -Message "Copying modules in $extractPath to 'C:\Program Files\WindowsPowerShell\Modules'" -Level 2
+        Write-LogEntry -Message "Copying modules in $extractPath to 'C:\Program Files\WindowsPowerShell\Modules'" -Level $script:level
         $downloadedModules = Get-ChildItem -Path $extractPath -Directory -ErrorAction SilentlyContinue
         foreach ($module in $downloadedModules) {
+            $script:level++
             $PSModulePath = Join-Path -Path "$($env:ProgramFiles)/WindowsPowerShell/Modules" -ChildPath $module.Name
             if (Test-Path -Path $PSModulePath) {
-                Write-Log "Removing existing module $($module.Name)" -Level 3
+                Write-LogEntry "Removing existing module $($module.Name)" -Level $script:level
                 Remove-Item -Include "*" -Path $PSModulePath -Recurse -Force
             }
 
-            Write-Log "Deploying module $($module.Name)" -Level 3
+            Write-LogEntry "Deploying module $($module.Name)" -Level $script:level
             $modulePath = Join-Path -Path $extractPath -ChildPath $module.Name
             $PSModulesPath = Join-Path -Path "$($env:ProgramFiles)/WindowsPowerShell" -ChildPath "Modules"
             Copy-Item -Path $modulePath -Destination $PSModulesPath -Recurse -Container -Force
+            $script:level--
         }
 
-        Write-LogEntry -Message 'Removing temporary components' -Level 2
+        Write-LogEntry -Message 'Removing temporary components' -Level $script:level
         Remove-Item -Path $extractPath -Recurse -Confirm:$false
         Remove-Item -Path $destination -Recurse -Confirm:$false
     }
+    $script:level--
+    $script:level--
+    $script:level--
 }
