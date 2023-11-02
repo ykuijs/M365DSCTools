@@ -39,6 +39,11 @@ Describe Get-ModulesFromBlobStorage {
             return $true
         }
         Mock -CommandName Copy-Item -MockWith { }
+        Mock -CommandName Get-ChildItem -MockWith {
+            return @{
+                Name = 'Microsoft365DSC'
+            }
+        }
     }
 
     Context 'Function retrieves blob successfully' {

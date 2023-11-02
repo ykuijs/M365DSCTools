@@ -37,7 +37,8 @@ Describe Add-ModulesToBlobStorage {
         }
         Mock -CommandName Get-Module -MockWith {
             return @{
-                Path    = 'C:\Program Files\WindowsPowerShell\Modules\Microsoft365Dsc\1.23.517.1'
+                Name    = 'Microsoft365DSC'
+                Path    = 'C:\Program Files\WindowsPowerShell\Modules\Microsoft365DSC\1.23.517.1'
                 Version = '1.23.517.1'
             }
         }
