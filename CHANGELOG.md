@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added Id as a new value to merge items in an array, in addition to UniqueId, NodeName and Identity
 - Updated package information in the module manifest file
+- Added the caching of the Microsoft365DSC module itself to Azure Blob storage
+- Extended the Get-ModulesFromBlobStorage function with the clear-out of existing modules
+- Corrected certain log strings and function descriptions
 
 ## [0.1.2] - 2023-10-06
 
