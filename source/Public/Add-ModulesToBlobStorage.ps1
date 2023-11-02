@@ -70,7 +70,7 @@ function Add-ModulesToBlobStorage
 
         Write-LogEntry -Message ('Saving module {0} (v{1})' -f $m365Module.Name, $m365Module.Version.ToString()) -Level $script:level
         Save-Module -Name $m365Module.Name -RequiredVersion $m365Module.Version.ToString() -Path $savePath
-            
+
         $data = Import-PowerShellDataFile -Path $dependenciesPath
         foreach ($dependency in $data.Dependencies) {
             Write-LogEntry -Message ('Saving module {0} (v{1})' -f $dependency.ModuleName, $dependency.RequiredVersion) -Level $script:level
