@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed bug in hashtable merge. Corrected Identity typo to Id.
+
 ## [0.1.4] - 2023-11-24
 
 ### Changed
