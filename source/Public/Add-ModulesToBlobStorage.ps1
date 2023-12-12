@@ -63,7 +63,8 @@ function Add-ModulesToBlobStorage
         Write-LogEntry -Message 'Downloading dependencies' -Level $script:level
         $script:level++
 
-        $savePath = Join-Path -Path $env:TEMP -ChildPath 'M365DSCModules'
+        $destination = Join-Path -Path $env:TEMP -ChildPath 'M365DSCModules'
+        $savePath = Join-Path -Path $destination -ChildPath $m365Module.Version.ToString()
         if (Test-Path -Path $savePath) {
             Write-LogEntry -Message "$savePath already exists. Removing!" -Level $script:level
             Remove-Item -Path $savePath -Recurse -Confirm:$false
