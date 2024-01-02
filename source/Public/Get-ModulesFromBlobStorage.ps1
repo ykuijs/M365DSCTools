@@ -1,6 +1,6 @@
 function Get-ModulesFromBlobStorage
 {
-<#
+    <#
 .SYNOPSIS
     Downloads all Microsoft365DSC dependencies from an Azure Blob Storage
 
@@ -56,7 +56,8 @@ function Get-ModulesFromBlobStorage
 
     Write-LogEntry -Message 'Checking download folder existence' -Level $script:level
     $destination = Join-Path -Path $env:TEMP -ChildPath 'M365DSCModules'
-    if ((Test-Path -Path $destination) -eq $false) {
+    if ((Test-Path -Path $destination) -eq $false)
+    {
         $script:level++
         Write-LogEntry -Message "Creating destination folder: '$destination'" -Level $script:level
         $null = New-Item -ItemType Directory -Path $destination
@@ -68,13 +69,16 @@ function Get-ModulesFromBlobStorage
     $blobContent = Get-AzStorageBlob -Container $ContainerName -Context $context -Prefix $prefix
 
     $script:level++
-    if ($null -eq $blobContent) {
+    if ($null -eq $blobContent)
+    {
         Write-LogEntry -Message "[ERROR] No files found that match the pattern: '$prefix'" -Level $script:level
     }
-    else {
+    else
+    {
         Write-LogEntry -Message "Downloading $($blobContent.Name) to $destination" -Level $script:level
         $downloadFile = Join-Path -Path $destination -ChildPath $blobContent.Name
-        if (Test-Path -Path $downloadFile) {
+        if (Test-Path -Path $downloadFile)
+        {
             $script:level++
             Write-LogEntry -Message "$downloadFile already exists. Removing!" -Level $script:level
             Remove-Item -Path $downloadFile -Confirm:$false
@@ -84,7 +88,8 @@ function Get-ModulesFromBlobStorage
 
         Write-LogEntry -Message "Extracting $($blobContent.Name)" -Level $script:level
         $extractPath = Join-Path -Path $destination -ChildPath $Version.ToString()
-        if (Test-Path -Path $extractPath) {
+        if (Test-Path -Path $extractPath)
+        {
             $script:level++
             Write-LogEntry -Message "$extractPath already exists. Removing!" -Level $script:level
             Remove-Item -Path $extractPath -Recurse -Confirm:$false
@@ -94,17 +99,19 @@ function Get-ModulesFromBlobStorage
 
         Write-LogEntry -Message "Copying modules in $extractPath to 'C:\Program Files\WindowsPowerShell\Modules'" -Level $script:level
         $downloadedModules = Get-ChildItem -Path $extractPath -Directory -ErrorAction SilentlyContinue
-        foreach ($module in $downloadedModules) {
+        foreach ($module in $downloadedModules)
+        {
             $script:level++
             $PSModulePath = Join-Path -Path "$($env:ProgramFiles)/WindowsPowerShell/Modules" -ChildPath $module.Name
-            if (Test-Path -Path $PSModulePath) {
+            if (Test-Path -Path $PSModulePath)
+            {
                 Write-LogEntry "Removing existing module $($module.Name)" -Level $script:level
-                Remove-Item -Include "*" -Path $PSModulePath -Recurse -Force
+                Remove-Item -Include '*' -Path $PSModulePath -Recurse -Force
             }
 
             Write-LogEntry "Deploying module $($module.Name)" -Level $script:level
             $modulePath = Join-Path -Path $extractPath -ChildPath $module.Name
-            $PSModulesPath = Join-Path -Path "$($env:ProgramFiles)/WindowsPowerShell" -ChildPath "Modules"
+            $PSModulesPath = Join-Path -Path "$($env:ProgramFiles)/WindowsPowerShell" -ChildPath 'Modules'
             Copy-Item -Path $modulePath -Destination $PSModulesPath -Recurse -Container -Force
             $script:level--
         }
