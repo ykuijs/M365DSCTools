@@ -11,11 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   These new functions can be used to manipulate various data objects, such as arrays and hashtables,
   so they can be used in PowerShell DSC configurations.
 
+### Fixed
+
+- Fixed bug in hashtable merge. Corrected Identity typo to Id.
+
 ## [0.1.5] - 2023-12-11
 
 ### Fixed
 
-- Fixed bug in hashtable merge. Corrected Identity typo to Id.
+- Added a folder deletion section to Add-ModulesToBlobStorage.ps1 to avoid packaging issues on self-hosted VMs.
 
 ## [0.1.4] - 2023-11-24
 
