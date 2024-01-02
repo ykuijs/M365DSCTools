@@ -5,6 +5,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added new Compare-DataObject, Copy-DataObject, Merg-DataObject and Sort-DataObject functions.
+  These new functions can be used to manipulate various data objects, such as arrays and hashtables,
+  so they can be used in PowerShell DSC configurations.
+
+## [0.1.5] - 2023-12-11
+
 ### Fixed
 
 - Fixed bug in hashtable merge. Corrected Identity typo to Id.

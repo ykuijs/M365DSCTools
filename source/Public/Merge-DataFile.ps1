@@ -1,28 +1,28 @@
-<#
- .Synopsis
-  Merges two PowerShell Data File hashtables
-
- .Description
-  This function merges two PowerShell Data file hashtables into one new
-  one. The values in the Merge hashtable are overwriting any existing
-  values in the Reference hashtable.
-
- .Parameter Reference
-  The Reference hashtable that is used as the starting point
-
- .Parameter Merge
-  The Merge hashtable that will be merged into the Reference hashtable.
-
- .Example
-   # Merges the Merge file into the Reference file
-   $reference = Import-PowerShellDataFile -Path 'reference.psd1'
-   $merge = Import-PowerShellDataFile -Path 'merge.psd1'
-
-   Merge-DataFile -Reference $reference -Merge $merge
-#>
 function Merge-DataFile
 {
-    [CmdletBinding()]
+<#
+.SYNOPSIS
+    Merges two PowerShell Data File hashtables
+
+.DESCRIPTION
+    This function merges two PowerShell Data file hashtables into one new
+    one. The values in the Merge hashtable are overwriting any existing
+    values in the Reference hashtable.
+
+.PARAMETER Reference
+    The Reference hashtable that is used as the starting point
+
+.PARAMETER Merge
+    The Merge hashtable that will be merged into the Reference hashtable.
+
+.EXAMPLE
+    # Merges the Merge file into the Reference file
+    $reference = Import-PowerShellDataFile -Path 'reference.psd1'
+    $merge = Import-PowerShellDataFile -Path 'merge.psd1'
+
+    Merge-DataFile -Reference $reference -Merge $merge
+#>
+[CmdletBinding()]
     param
     (
         [Parameter(Mandatory = $true)]

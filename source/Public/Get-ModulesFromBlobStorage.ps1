@@ -1,29 +1,29 @@
-<#
- .Synopsis
-  Downloads all Microsoft365DSC dependencies from an Azure Blob Storage
-
- .Description
-  This function downloads the zipped dependency modules corresponding to the
-  required Microsoft365DSC version from an Azure Blob Storage, if available.
-  The dependencies are then unzipped and copied to the PowerShell Modules folder.
-
- .Parameter ResourceGroupName
-  The Azure Resource Group Name where the Storage Account is located
-
- .Parameter StorageAccountName
-  The name of the Storage Account where the zip file will be downloaded from
-
-  .Parameter ContainerName
-  The name of the Container where the zip file will be downloaded from
-
-  .Parameter Version
-  The version of the Microsoft365DSC module for which the prerequisites should be retrieved
-
-  .Example
-   Get-ModulesFromBlobStorage -ResourceGroupName 'MyResourceGroup' -StorageAccountName 'MyStorageAccount' -ContainerName 'MyContainer' -Version 1.23.530.1
-#>
 function Get-ModulesFromBlobStorage
 {
+<#
+.SYNOPSIS
+    Downloads all Microsoft365DSC dependencies from an Azure Blob Storage
+
+.DESCRIPTION
+    This function downloads the zipped dependency modules corresponding to the
+    required Microsoft365DSC version from an Azure Blob Storage, if available.
+    The dependencies are then unzipped and copied to the PowerShell Modules folder.
+
+.PARAMETER ResourceGroupName
+    The Azure Resource Group Name where the Storage Account is located
+
+.PARAMETER StorageAccountName
+    The name of the Storage Account where the zip file will be downloaded from
+
+.PARAMETER ContainerName
+    The name of the Container where the zip file will be downloaded from
+
+.PARAMETER Version
+    The version of the Microsoft365DSC module for which the prerequisites should be retrieved
+
+.EXAMPLE
+    Get-ModulesFromBlobStorage -ResourceGroupName 'MyResourceGroup' -StorageAccountName 'MyStorageAccount' -ContainerName 'MyContainer' -Version 1.23.530.1
+#>
     [CmdletBinding()]
     param
     (

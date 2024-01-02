@@ -46,6 +46,12 @@ Describe Get-ModulesFromBlobStorage {
         }
     }
 
+    Context 'Sanity Check' {
+        It 'Help' {
+            Get-ModulesFromBlobStorage -? | Out-String -Stream | Should -Contain SYNOPSIS
+        }
+    }
+
     Context 'Function retrieves blob successfully' {
         BeforeEach {
             Mock -CommandName Get-AzStorageBlob -MockWith {

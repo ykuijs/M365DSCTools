@@ -1,26 +1,26 @@
-<#
- .Synopsis
-  Downloads all Microsoft365DSC dependencies and uploads these to an Azure Blob Storage
-
- .Description
-  This function checks which dependencies the used version of Microsoft365DSC
-  requires and downloads these from the PowerShell Gallery. The dependencies
-  are then packaged into a zip file and uploaded to an Azure Blob Storage.
-
- .Parameter ResourceGroupName
-  The Azure Resource Group Name where the Storage Account is located
-
- .Parameter StorageAccountName
-  The name of the Storage Account where the zip file will be uploaded to
-
-  .Parameter ContainerName
-  The name of the Container where the zip file will be uploaded to
-
-  .Example
-   Add-ModulesToBlobStorage -ResourceGroupName 'MyResourceGroup' -StorageAccountName 'MyStorageAccount' -ContainerName 'MyContainer'
-#>
 function Add-ModulesToBlobStorage
 {
+<#
+.SYNOPSIS
+    Downloads all Microsoft365DSC dependencies and uploads these to an Azure Blob Storage
+
+.DESCRIPTION
+    This function checks which dependencies the used version of Microsoft365DSC
+    requires and downloads these from the PowerShell Gallery. The dependencies
+    are then packaged into a zip file and uploaded to an Azure Blob Storage.
+
+.PARAMETER ResourceGroupName
+    The Azure Resource Group Name where the Storage Account is located
+
+.PARAMETER StorageAccountName
+    The name of the Storage Account where the zip file will be uploaded to
+
+.PARAMETER ContainerName
+    The name of the Container where the zip file will be uploaded to
+
+.EXAMPLE
+    Add-ModulesToBlobStorage -ResourceGroupName 'MyResourceGroup' -StorageAccountName 'MyStorageAccount' -ContainerName 'MyContainer'
+#>
     [CmdletBinding()]
     param
     (

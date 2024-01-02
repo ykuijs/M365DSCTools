@@ -48,6 +48,12 @@ Describe Add-ModulesToBlobStorage {
         Mock -CommandName Save-Module -MockWith { }
     }
 
+    Context 'Sanity Check' {
+        It 'Help' {
+            Add-ModulesToBlobStorage -? | Out-String -Stream | Should -Contain SYNOPSIS
+        }
+    }
+
     Context 'Function uploads blob successfully' {
         BeforeEach {
             Mock -CommandName Test-Path -MockWith {
