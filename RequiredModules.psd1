@@ -14,5 +14,5 @@
     ChangelogManagement         = 'latest'
     Sampler                     = 'latest'
     'Sampler.GitHubTasks'       = 'latest'
-
+    'PowerShellGet'             = 'latest'
 }

@@ -22,7 +22,7 @@ function Merge-DataFile
 
     Merge-DataFile -Reference $reference -Merge $merge
 #>
-[CmdletBinding()]
+    [CmdletBinding()]
     param
     (
         [Parameter(Mandatory = $true)]

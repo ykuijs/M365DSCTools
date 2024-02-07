@@ -43,8 +43,6 @@ Describe Add-ModulesToBlobStorage {
             }
         }
 
-        Get-Command Save-Module
-
         Mock -CommandName Save-Module -MockWith { }
     }
 
@@ -81,6 +79,7 @@ Describe Add-ModulesToBlobStorage {
             Mock -CommandName Remove-AzStorageBlob -MockWith { } -RemoveParameterType Context
             Mock -CommandName Set-AzStorageBlobContent -MockWith { } -RemoveParameterType Context
             Mock -CommandName Remove-Item -MockWith { }
+            Mock -CommandName New-Item -MockWith { }
             Mock -CommandName Compress-Archive -MockWith { }
         }
 
