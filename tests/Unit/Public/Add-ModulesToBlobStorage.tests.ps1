@@ -43,6 +43,8 @@ Describe Add-ModulesToBlobStorage {
             }
         }
 
+        Import-Module -Name PowerShellGet
+
         Mock -CommandName Save-Module -MockWith { }
     }
 

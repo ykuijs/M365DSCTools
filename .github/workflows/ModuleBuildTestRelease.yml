@@ -25,7 +25,7 @@ jobs:
     name: Package Module
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@main
         with:
           fetch-depth: 0
       - name: Calculate ModuleVersion (GitVersion)
@@ -53,7 +53,7 @@ jobs:
     needs:
       - Build_Stage_Package_Module
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@main
         with:
           fetch-depth: 0
       - name: Download Build Artifact
@@ -70,25 +70,6 @@ jobs:
           path: ${{ env.buildFolderName }}/${{ env.testResultFolderName }}/
           name: CodeCoverageWinPS51
 
-  # Test_Stage_Code_Coverage:
-  #   name: Publish Code Coverage
-  #   runs-on: ubuntu-latest
-  #   needs:
-  #     - Build_Stage_Package_Module
-  #     - Test_Stage_test_windows_ps
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Set Environment Variables
-  #       run: |
-  #         $repositoryOwner,$repositoryName = $env:BUILD_REPOSITORY_NAME -split '/'
-  #         echo "##vso[task.setvariable variable=RepositoryOwner;isOutput=true]$repositoryOwner"
-  #         echo "##vso[task.setvariable variable=RepositoryName;isOutput=true]$repositoryName"
-  #       shell: pwsh
-  #     - name: Download Pipeline Artifact
-  #       uses: actions/download-artifact@v2
-  #     - name: Download Test Artifact Windows (PS 5.1)
-  #       uses: actions/download-artifact@v2
-
   Deploy_Stage_Deploy_Module:
     name: Deploy Module
     runs-on: ubuntu-latest
@@ -97,7 +78,7 @@ jobs:
       #- Test_Stage_Code_Coverage
     if: (success() && ((github.ref == 'refs/heads/main') || startsWith(github.ref, 'refs/tags/')) && (contains(github.repository_owner, 'ykuijs')))
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@main
         with:
           fetch-depth: 0
       - name: Download Build Artifact
