@@ -42,7 +42,7 @@ jobs:
         env:
           ModuleVersion: ${{ steps.GitVersion.outputs.NuGetVersionV2 }}
       - name: Publish Build Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.buildArtifactName }}
           path: ${{ env.buildFolderName }}/
@@ -57,7 +57,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Download Build Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.buildArtifactName }}
           path: ${{ env.buildFolderName }}/
@@ -65,7 +65,7 @@ jobs:
         shell: powershell
         run: './build.ps1 -Tasks Test'
       - name: Publish Test Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: ${{ env.buildFolderName }}/${{ env.testResultFolderName }}/
           name: CodeCoverageWinPS51
@@ -82,7 +82,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Download Build Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.buildArtifactName }}
           path: ${{ env.buildFolderName }}/

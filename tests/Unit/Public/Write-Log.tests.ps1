@@ -39,7 +39,6 @@ Describe Write-Log {
             $global:OutString = ''
             Write-Log -Object 'This is a test entry!'
             Should -Invoke Write-Host -Times 5
-            $global:OutString
         }
 
         It 'Should successfully write a failure log entry' {

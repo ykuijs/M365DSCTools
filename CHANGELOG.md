@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added new internal Write-Log function
 - Added Copy-Object function to copy hashtable objects by value instead of by reference
 - Added Import-PSDataFile function that fixes the limitation of the default Import-PowerShellDataFile function.
+- Added Set-ADOEnvironment function to configure Azure DevOps environments correctly.
 
 ### Remove
 
