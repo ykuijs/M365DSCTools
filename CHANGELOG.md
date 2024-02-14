@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Import-PSDataFile function that fixes the limitation of the default Import-PowerShellDataFile function.
 - Added Set-ADOEnvironment function to configure Azure DevOps environments correctly.
 
+### Changed
+
+- Updated information in the Readme file
+
 ### Remove
 
 - Rollback of the new DataObject functions. These will be replaced by the [ObjectGraphTools module](https://www.powershellgallery.com/packages/ObjectGraphTools)
