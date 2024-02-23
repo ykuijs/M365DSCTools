@@ -1,3 +1,5 @@
+function Merge-Array
+{
 <#
  .Synopsis
   Merges two arrays into one new array
@@ -20,8 +22,6 @@
 
    Merge-Array -Reference $reference -Merge $merge
 #>
-function Merge-Array
-{
     param
     (
         [Parameter(Mandatory = $true)]

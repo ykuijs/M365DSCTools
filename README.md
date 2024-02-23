@@ -15,9 +15,17 @@ This module contains the following functions:
 | Function | Description |
 |----------|-------------|
 | Add-ModulesToBlobStorage | Add blob to an Azure Blob Storage |
+| Convert-M365DSCExportToPowerShellDataFile | Convert a Microsoft365DSC export to a PowerShell data file |
 | Copy-Object | Clone an object, e.g. hashtables, making sure no references between the source and destination objects exist anymore |
+| Get-EnvironmentsGenericInfo | Collects all CICD information from the '<Environment>#Generic.psd1' data files and returns this as one hashtable |
 | Get-ModulesFromBlobStorage | Get a blob from an Azure Blob Storage |
 | Import-PSDataFile | Updated function to import PowerShell data files but without the size limitation |
 | Merge-DataObject | Function to merge data objects [Deprecated] |
 | Set-ADOEnvironment | Creates and configures environments in Azure DevOps pipelines |
+| Set-PipelineYaml | Updates the Environments parameter in the specified Yaml file |
+| Test-M365PowerShellDataFile | Test if the merged data file complies with the Microsoft365DSC schema |
 | Write-Log | Logging function used by other functions |
+
+## Changelog
+
+The changelog can be found [here](CHANGELOG.md).

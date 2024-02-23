@@ -7,10 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added new internal Write-Log function
-- Added Copy-Object function to copy hashtable objects by value instead of by reference
-- Added Import-PSDataFile function that fixes the limitation of the default Import-PowerShellDataFile function.
+- Added new more advanced Write-Log function.
+- Added Convert-M365DSCExportToPowerShellDataFile function to convert a Microsoft365DSC export
+  to a PowerShell data file that complies with the format specified in the M365DSC.CompositeResources
+  module.
+- Added Copy-Object function to copy hashtable objects by value instead of by reference.
+- Added Get-EnvironmentsGenericInfo function to retrieve generic information on the CICD
+  config from the Generic data files.
+- Added Import-PSDataFile function that fixes the limitation of the default
+  Import-PowerShellDataFile function.
 - Added Set-ADOEnvironment function to configure Azure DevOps environments correctly.
+- Added Set-PipelineYaml function to configure Azure DevOps pipeline YAML files correctly.
+- Added Test-M365PowerShellDataFile function to test if the merged data file complies with the
+  Microsoft365DSC schema, as specified in the ExampleData file of the CompositeResources module.
 
 ### Changed
 

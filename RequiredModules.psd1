@@ -15,4 +15,6 @@
     Sampler                     = 'latest'
     'Sampler.GitHubTasks'       = 'latest'
     'PowerShellGet'             = 'latest'
+    'powershell-yaml'           = 'latest'
+    'ObjectGraphTools'          = 'latest'
 }
