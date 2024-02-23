@@ -39,6 +39,12 @@ Describe Convert-M365DSCExportToPowerShellDataFile {
             )
         }
 
+        # Declare M365DSC functions, so they can be mocked
+        function Global:Set-M365DSCTelemetryOption {}
+        function Global:New-M365DSCReportFromConfiguration {}
+
+        Mock -CommandName Set-M365DSCTelemetryOption -MockWith {}
+        Mock -CommandName New-M365DSCReportFromConfiguration -MockWith {}
         Mock -CommandName Write-Log -MockWith {}
 
         Mock -CommandName Get-Item -MockWith {
@@ -50,8 +56,6 @@ Describe Convert-M365DSCExportToPowerShellDataFile {
         Mock -CommandName Out-File -MockWith {}
         Mock -CommandName Test-Path -MockWith { return $true}
         Mock -CommandName Remove-Item -MockWith {}
-        Mock -CommandName Set-M365DSCTelemetryOption -MockWith {}
-        Mock -CommandName New-M365DSCReportFromConfiguration -MockWith {}
         Mock -CommandName Get-Content -MockWith {
             return '[{"ResourceName":"O365OrgSettings","ResourceInstanceName":"O365OrgSettings","ApplicationId":"$ConfigurationData.NonNodeData.ApplicationId","CertificateThumbprint":"$ConfigurationData.NonNodeData.CertificateThumbprint","CortanaEnabled":false,"IsSingleInstance":"Yes","M365WebEnableUsersToOpenFilesFrom3PStorage":false,"PlannerAllowCalendarSharing":false,"TenantId":"$OrganizationName","VivaInsightsDigestEmail":false,"VivaInsightsOutlookAddInAndInlineSuggestions":false,"VivaInsightsScheduleSendSuggestions":false,"VivaInsightsWebExperience":false}]'
         }
@@ -104,7 +108,7 @@ Describe Convert-M365DSCExportToPowerShellDataFile {
     }
 
     Context 'Test function Convert-M365DSCExportToPowerShellDataFile' {
-        It 'Should copy hashtables successfully' {
+        It 'Should convert an export successfully' {
             Convert-M365DSCExportToPowerShellDataFile -Workload 'Office365' -SourceFile 'C:\Temp\O365.ps1' -ResultFolder 'C:\Temp\Report'
             Should -Invoke Remove-Item
             Should -Invoke Out-File
