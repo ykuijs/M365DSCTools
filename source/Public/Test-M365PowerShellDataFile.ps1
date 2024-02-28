@@ -49,11 +49,7 @@ function Test-M365PowershellDataFile
     begin
     {
         # Test if the ObjectGraphTools module is loaded and the class is available
-        try
-        {
-            [PSNode]$null = @{}
-        }
-        catch
+        if (-not ([System.Management.Automation.PSTypeName]'PSNode').Type)
         {
             Import-Module ObjectGraphTools -Force
         }
@@ -70,10 +66,6 @@ function Test-M365PowershellDataFile
         $Pester_Config = @(
 
             '#Requires -Modules Pester'
-            '$PesterPreference = [PesterConfiguration]::Default'
-            '$PesterPreference.Should.ErrorAction = "continue"'
-            '$PesterPreference.Output.Verbosity = "Detailed"'
-            '$PesterPreference.Output.StackTraceVerbosity = "Firstline"'
 
             "Describe '--- Check M365-DSC-CompositeResources configuration ---' {"
 
@@ -93,19 +85,22 @@ function Test-M365PowershellDataFile
 
                             $Obj_Ref = Get-RefNodeExampleData -node $_.ParentNode -ReferenceObject $Obj_M365DataExample
 
-                            $Required = $Obj_Ref.GetEnumerator() | Where-Object { $_.value -like '*| Required |*' }
-                            $Available = $_.parentnode.ChildNodes.name
-
-                            foreach ( $Item in $Required.name )
+                            if ($null -ne $Obj_Ref)
                             {
-                                if ( $Available -notcontains $Item -and $Exclude_Required -notContains $item )
+                                $Required = $Obj_Ref.GetEnumerator() | Where-Object { $_.value -like '*| Required |*' }
+                                $Available = $_.parentnode.ChildNodes.name
+
+                                foreach ( $Item in $Required.name )
                                 {
-                                    # if ( $Available -notcontains $Item -and $Exclude -notContains $item ) {
-                                    if ($item -eq 'UniqueId')
+                                    if ( $Available -notcontains $Item -and $Exclude_Required -notContains $item )
                                     {
-                                        #'"   [-] Fix UniqueID "| write-host -ForegroundColor Yellow' -f $_.parentnode.pathname, $Item
+                                        # if ( $Available -notcontains $Item -and $Exclude -notContains $item ) {
+                                        if ($item -eq 'UniqueId')
+                                        {
+                                            #'"   [-] Fix UniqueID "| write-host -ForegroundColor Yellow' -f $_.parentnode.pathname, $Item
+                                        }
+                                        "      `$InputObject.{0}.{1} | Should -Not -BeNullOrEmpty -Because 'parameter {1} is required for {0}'" -f $_.parentnode.pathname, $Item
                                     }
-                                    '"   [-] {0}.{1} [Required item is missing]"| write-host -ForegroundColor darkred' -f $_.parentnode.pathname, $Item
                                 }
                             }
                         }
@@ -117,12 +112,12 @@ function Test-M365PowershellDataFile
                             # Type validation
                             if ($Obj_Ref.type)
                             {
-                                "      `$InputObject{0} | {1}" -f $_.Pathname, $(Convert-PesterType $Obj_Ref.type)
+                                "      `$InputObject.{0} | {1}" -f $_.Pathname, $(Convert-PesterType $Obj_Ref.type)
                             }
                             # validationSet validation
                             if ($Obj_Ref.ValidateSet)
                             {
-                                "      `$InputObject{0} | should -beIn {1}" -f $_.Pathname, $Obj_Ref.ValidateSet
+                                "      `$InputObject.{0} | should -beIn {1}" -f $_.Pathname, $Obj_Ref.ValidateSet
                             }
 
                             # No Ref data
@@ -153,9 +148,31 @@ function Test-M365PowershellDataFile
         }
 
         # Execute pester script
-        . $Pester_Script
+        $Params = [ordered]@{
+            Path = $Pester_Script
+        }
+
+        $Container = New-PesterContainer @Params
+
+        $Configuration = [PesterConfiguration]@{
+            Run    = @{
+                Container = $Container
+                PassThru  = $true
+            }
+            Should = @{
+                ErrorAction = "continue"
+            }
+            Output = @{
+                Verbosity           = 'Detailed'
+                StackTraceVerbosity = "Firstline"
+            }
+        }
+
+        $result = Invoke-Pester -Configuration $Configuration
 
         # Clean temp file
         Remove-Item -Path $Pester_Script -Force -ErrorAction SilentlyContinue
+
+        return $result
     }
 }

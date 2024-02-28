@@ -41,9 +41,9 @@ function Get-EnvironmentsGenericInfo
                 $environment = $genericFile.Directory.BaseName
                 $genericInfo = Import-PowerShellDataFile -Path $genericFile.FullName
                 $result.$environment += @{
-                    DependsOn = $genericInfo.NonNodeData.CICD.DependsOn
-                    Branch    = $genericInfo.NonNodeData.CICD.UseCodeBranch
-                    Approvers = $genericInfo.NonNodeData.CICD.Approvers
+                    DependsOn = $genericInfo.NonNodeData.Environment.CICD.DependsOn
+                    Branch    = $genericInfo.NonNodeData.Environment.CICD.UseCodeBranch
+                    Approvers = $genericInfo.NonNodeData.Environment.CICD.Approvers
                 }
             }
         }

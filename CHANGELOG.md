@@ -5,6 +5,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed bug in Test-M365PowerShellDataFile where an incorrect path was generated.
+- Converted the required parameter test in Test-M365PowerShellDataFile to an actual Pester
+  test, so Pester will fail if the parameter is missing.
+- Fixed issue in Test-M365PowerShellDataFile where errors were displayed when the example
+  file did not contain a property that was specified in the data file.
+- Fixed issue with correctly loading the ObjectGraphTools module, making
+  sure the PSNode classes are available.
+- Corrected location of generic information files in the Get-EnvironmentsGenericInfo function.
+- Corrected issue in Set-PipelineYaml where the dependsOn property was written as an empty
+  string instead of null
+
 ## [0.2.1] - 2024-02-23
 
 ### Added

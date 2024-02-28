@@ -29,7 +29,10 @@ InModuleScope $ProjectName {
                     }
                 }
 
-                Import-Module ObjectGraphTools -Global -Force
+                if (-not ([System.Management.Automation.PSTypeName]'PSNode').Type)
+                {
+                    Import-Module ObjectGraphTools -Force
+                }
 
                 $node = [PSNode]::ParseInput($exampleData, 20)
                 $leafnode = $node._("NonNodeData")._("Office365")._("OrgSettings")._("ToDoIsPushNotificationEnabled")

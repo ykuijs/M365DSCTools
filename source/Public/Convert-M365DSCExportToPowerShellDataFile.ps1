@@ -54,11 +54,7 @@ function Convert-M365DSCExportToPowerShellDataFile
     begin
     {
         # Test if the ObjectGraphTools module is loaded and the class is available
-        try
-        {
-            [PSNode]$null = @{}
-        }
-        catch
+        if (-not ([System.Management.Automation.PSTypeName]'PSNode').Type)
         {
             Import-Module ObjectGraphTools -Force
         }

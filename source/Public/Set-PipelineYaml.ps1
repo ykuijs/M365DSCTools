@@ -74,9 +74,14 @@ function Set-PipelineYaml
                     {
                         $envName = $_.InputObject
                         Write-Log -Object "Adding '$envName' to the pipeline Yaml file"
+                        $dependsOn = $EnvironmentsInfo.$envName.DependsOn
+                        if ([String]::IsNullOrEmpty($dependsOn))
+                        {
+                            $dependsOn = $null
+                        }
                         $defaults += [Ordered]@{
                             Name      = $envName
-                            DependsOn = $EnvironmentsInfo.$envName.DependsOn
+                            DependsOn = $dependsOn
                             Branch    = $EnvironmentsInfo.$envName.Branch
                         }
                     }

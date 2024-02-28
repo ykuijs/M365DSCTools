@@ -1,3 +1,5 @@
+function Merge-Hashtable
+{
 <#
  .Synopsis
   Merges two hashtables
@@ -33,8 +35,6 @@
 
    Merge-Hashtable -Reference $reference -Merge $merge
 #>
-function Merge-Hashtable
-{
     param
     (
         [Parameter(Mandatory = $true)]
