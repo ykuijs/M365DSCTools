@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   sure the PSNode classes are available.
 - Corrected location of generic information files in the Get-EnvironmentsGenericInfo function.
 - Corrected issue in Set-PipelineYaml where the dependsOn property was written as an empty
-  string instead of null
+  string instead of null.
 
 ## [0.2.1] - 2024-02-23
 

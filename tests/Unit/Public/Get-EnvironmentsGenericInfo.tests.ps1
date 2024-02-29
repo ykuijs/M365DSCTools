@@ -42,10 +42,12 @@ Describe Get-EnvironmentsGenericInfo {
         Mock -CommandName Import-PowerShellDataFile -MockWith {
             return @{
                 NonNodeData = @{
-                    CICD = @{
-                        DependsOn = 'TestDependsOn'
-                        UseCodeBranch = 'TestBranch'
-                        Approvers = 'TestApprovers'
+                    Environment = @{
+                        CICD = @{
+                            DependsOn = 'TestDependsOn'
+                            UseCodeBranch = 'TestBranch'
+                            Approvers = 'TestApprovers'
+                        }
                     }
                 }
             }
