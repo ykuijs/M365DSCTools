@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2] - 2024-02-29
+
 - Fixed bug in Test-M365PowerShellDataFile where an incorrect path was generated.
 - Converted the required parameter test in Test-M365PowerShellDataFile to an actual Pester
   test, so Pester will fail if the parameter is missing.
