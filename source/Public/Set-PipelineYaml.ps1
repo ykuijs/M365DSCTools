@@ -63,7 +63,15 @@ function Set-PipelineYaml
             {
                 $defaults = $envParameter.default
 
-                $currentEnvs = $defaults.Name
+                if ($null -eq $defaults)
+                {
+                    $defaults = @()
+                    $currentEnvs = @()
+                }
+                else
+                {
+                    $currentEnvs = $defaults.Name
+                }
                 [Array]$targetEnvs = $EnvironmentsInfo.Keys
 
                 $diff = Compare-Object -ReferenceObject $currentEnvs -DifferenceObject $targetEnvs -IncludeEqual
@@ -84,12 +92,14 @@ function Set-PipelineYaml
                             DependsOn = $dependsOn
                             Branch    = $EnvironmentsInfo.$envName.Branch
                         }
+                        continue
                     }
                     { $_.SideIndicator -eq '<=' }
                     {
                         $envName = $_.InputObject
                         Write-Log -Object "Removing '$envName' from the pipeline Yaml file"
                         $defaults = $defaults | Where-Object { $_.Name -ne $envName }
+                        continue
                     }
                     { $_.SideIndicator -eq '==' }
                     {
@@ -103,6 +113,7 @@ function Set-PipelineYaml
                         }
                         $updateEnv.DependsOn = $dependsOn
                         $updateEnv.Branch = $EnvironmentsInfo.$envName.Branch
+                        continue
                     }
                 }
 
