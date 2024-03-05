@@ -5,6 +5,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed issue in Set-PipelineYaml where an exception was thrown when the Defaults
+  parameter was empty [Fixes #8](https://github.com/ykuijs/M365DSCTools/issues/8)
+
 ## [0.2.2] - 2024-02-29
 
 - Fixed bug in Test-M365PowerShellDataFile where an incorrect path was generated.
