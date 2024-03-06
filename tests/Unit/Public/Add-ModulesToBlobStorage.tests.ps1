@@ -29,7 +29,7 @@ AfterAll {
 
 Describe Add-ModulesToBlobStorage {
     BeforeAll {
-        Mock -CommandName Write-LogEntry -MockWith { }
+        Mock -CommandName Write-Log -MockWith { }
         Mock -CommandName Get-AzStorageAccount -MockWith {
             return @{
                 Context = 'Context'

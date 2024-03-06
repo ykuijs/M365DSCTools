@@ -41,17 +41,15 @@ function Add-ModulesToBlobStorage
         $ContainerName
     )
 
-    $script:level++
-    Write-LogEntry -Message 'Upload Microsoft365DSC module dependencies to storage container' -Level $script:level
+    Write-Log -Object 'Upload Microsoft365DSC module dependencies to storage container'
 
-    $script:level++
-    Write-LogEntry -Message "Connecting to storage account '$StorageAccountName'" -Level $script:level
+    Write-Log -Object "Connecting to storage account '$StorageAccountName'"
     $storageAcc = Get-AzStorageAccount -ResourceGroupName $ResourceGroupName -Name $StorageAccountName
 
-    Write-LogEntry -Message 'Retrieving storage account context' -Level $script:level
+    Write-Log -Object 'Retrieving storage account context'
     $context = $storageAcc.Context
 
-    Write-LogEntry -Message 'Checking dependencies' -Level $script:level
+    Write-Log -Object 'Checking dependencies'
     $m365Module = Get-Module -Name Microsoft365DSC -ListAvailable | Sort-Object -Property Version -Descending | Select-Object -First 1
     $modulePath = Split-Path -Path $m365Module.Path -Parent
 
@@ -61,60 +59,52 @@ function Add-ModulesToBlobStorage
 
     if (Test-Path -Path $dependenciesPath)
     {
-        Write-LogEntry -Message 'Downloading dependencies' -Level $script:level
-        $script:level++
+        Write-Log -Object 'Downloading dependencies'
 
         $destination = Join-Path -Path $env:TEMP -ChildPath 'M365DSCModules'
         $savePath = Join-Path -Path $destination -ChildPath $m365Module.Version.ToString()
         if (Test-Path -Path $savePath)
         {
-            Write-LogEntry -Message "$savePath already exists. Removing!" -Level $script:level
+            Write-Log -Object "$savePath already exists. Removing!"
             Remove-Item -Path $savePath -Recurse -Confirm:$false
         }
         $null = New-Item -Path $savePath -ItemType 'Directory'
 
-        Write-LogEntry -Message ('Saving module {0} (v{1})' -f $m365Module.Name, $m365Module.Version.ToString()) -Level $script:level
+        Write-Log -Object ('Saving module {0} (v{1})' -f $m365Module.Name, $m365Module.Version.ToString())
         Save-Module -Name $m365Module.Name -RequiredVersion $m365Module.Version.ToString() -Path $savePath
 
         $data = Import-PowerShellDataFile -Path $dependenciesPath
         foreach ($dependency in $data.Dependencies)
         {
-            Write-LogEntry -Message ('Saving module {0} (v{1})' -f $dependency.ModuleName, $dependency.RequiredVersion) -Level $script:level
+            Write-Log -Object ('Saving module {0} (v{1})' -f $dependency.ModuleName, $dependency.RequiredVersion)
             Save-Module -Name $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Path $savePath
         }
-        $script:level--
 
-        Write-LogEntry -Message 'Packaging Zip file' -Level $script:level
+        Write-Log -Object 'Packaging Zip file'
         $zipFileName = "M365DSCDependencies-$versionString.zip"
         $zipFilePath = Join-Path -Path $env:TEMP -ChildPath $zipFileName
         if ((Test-Path -Path $zipFilePath))
         {
-            $script:level++
-            Write-LogEntry -Message "$zipFileName already exist on disk. Removing!" -Level $script:level
+            Write-Log -Object "$zipFileName already exist on disk. Removing!"
             Remove-Item -Path $zipFilePath -Confirm:$false
-            $script:level--
         }
         Compress-Archive -Path $savePath\* -DestinationPath $zipFilePath
 
-        Write-LogEntry -Message 'Uploading Zip file' -Level $script:level
+        Write-Log -Object 'Uploading Zip file'
         $blobContent = Get-AzStorageBlob -Container $ContainerName -Context $context -Prefix $zipFileName
         if ($null -ne $blobContent)
         {
-            $script:level++
-            Write-LogEntry -Message "$zipFileName already exist in the Blob Storage. Removing!" -Level $script:level
+            Write-Log -Object "$zipFileName already exist in the Blob Storage. Removing!"
             $blobContent | Remove-AzStorageBlob
-            $script:level--
         }
         $null = Set-AzStorageBlobContent -Container $ContainerName -File $zipFilePath -Context $context -Force
 
-        Write-LogEntry -Message 'Removing temporary components' -Level $script:level
+        Write-Log -Object 'Removing temporary components'
         Remove-Item -Path $savePath -Recurse -Confirm:$false -Force
         Remove-Item -Path $zipFilePath -Confirm:$false
     }
     else
     {
-        Write-LogEntry -Message '[ERROR] Dependencies\Manifest.psd1 file not found' -Level $script:level
+        Write-Log -Object '[ERROR] Dependencies\Manifest.psd1 file not found'
     }
-    $script:level--
-    $script:level--
 }
