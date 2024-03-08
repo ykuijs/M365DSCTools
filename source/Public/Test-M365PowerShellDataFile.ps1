@@ -62,7 +62,7 @@ function Test-M365PowershellDataFile
         # Load Example data from module M365DSC.CompositeResources
         $Obj_M365DataExample = Import-PSDataFile -Path (((Get-Module -ListAvailable M365DSC.CompositeResources).path | Split-Path) + '\M365ConfigurationDataExample.psd1')
 
-        $Node_Root = Get-Node $InputObject
+        $Node_Root = Get-Node -InputObject $InputObject
         $Pester_Config = @(
 
             '#Requires -Modules Pester'
