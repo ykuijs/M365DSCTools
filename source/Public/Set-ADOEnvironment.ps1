@@ -422,7 +422,7 @@ function Set-ADOEnvironment
         }
         else
         {
-            Write-Log -Object '    Error while retrieving Environment Checks'
+            Write-Log -Object '    Error while retrieving Environment Checks' -Failure
             return $false
         }
 

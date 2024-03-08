@@ -25,6 +25,7 @@ function Get-ModulesFromBlobStorage
     Get-ModulesFromBlobStorage -ResourceGroupName 'MyResourceGroup' -StorageAccountName 'MyStorageAccount' -ContainerName 'MyContainer' -Version 1.23.530.1
 #>
     [CmdletBinding()]
+    [OutputType([System.Boolean])]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -66,7 +67,8 @@ function Get-ModulesFromBlobStorage
 
     if ($null -eq $blobContent)
     {
-        Write-Log -Object "[ERROR] No files found that match the pattern: '$prefix'"
+        Write-Log -Object "[ERROR] No files found that match the pattern: '$prefix'" -Failure
+        return $false
     }
     else
     {
@@ -109,4 +111,5 @@ function Get-ModulesFromBlobStorage
         Remove-Item -Path $extractPath -Recurse -Confirm:$false
         Remove-Item -Path $destination -Recurse -Confirm:$false
     }
+    return $true
 }

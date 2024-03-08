@@ -86,7 +86,8 @@ Describe Add-ModulesToBlobStorage {
         }
 
         It 'Upload successful' {
-            Add-ModulesToBlobStorage -ResourceGroupName 'M365DscResources' -StorageAccountName 'M365DscStorageAccount' -ContainerName 'M365DscContainer' | Should -Invoke 'Set-AzStorageBlobContent'
+            Add-ModulesToBlobStorage -ResourceGroupName 'M365DscResources' -StorageAccountName 'M365DscStorageAccount' -ContainerName 'M365DscContainer' | Should -Be $true
+            Should -Invoke 'Set-AzStorageBlobContent'
         }
     }
 
@@ -98,7 +99,8 @@ Describe Add-ModulesToBlobStorage {
         }
 
         It 'File does not exist' {
-            Add-ModulesToBlobStorage -ResourceGroupName 'M365DscResources' -StorageAccountName 'M365DscStorageAccount' -ContainerName 'M365DscContainer' | Should -Invoke 'Save-Module' -ModuleName 'M365DSCTools' -Times 0
+            Add-ModulesToBlobStorage -ResourceGroupName 'M365DscResources' -StorageAccountName 'M365DscStorageAccount' -ContainerName 'M365DscContainer' | Should -Be $false
+            Should -Invoke 'Save-Module' -ModuleName 'M365DSCTools' -Times 0
         }
     }
 }

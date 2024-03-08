@@ -65,7 +65,8 @@ Describe Get-ModulesFromBlobStorage {
         }
 
         It 'Returns a single object' {
-            Get-ModulesFromBlobStorage -ResourceGroupName 'M365DscResources' -StorageAccountName 'M365DscStorageAccount' -ContainerName 'M365DscContainer' -Version '1.23.530.1' | Should -Invoke 'Copy-Item' -ModuleName 'M365DSCTools' -Times 1
+            Get-ModulesFromBlobStorage -ResourceGroupName 'M365DscResources' -StorageAccountName 'M365DscStorageAccount' -ContainerName 'M365DscContainer' -Version '1.23.530.1' | Should -Be $true
+            Should -Invoke 'Copy-Item' -ModuleName 'M365DSCTools' -Times 1
         }
     }
 
@@ -75,7 +76,8 @@ Describe Get-ModulesFromBlobStorage {
         }
 
         It 'Returns a single object' {
-            Get-ModulesFromBlobStorage -ResourceGroupName 'M365DscResources' -StorageAccountName 'M365DscStorageAccount' -ContainerName 'M365DscContainer' -Version '1.23.530.1' | Should -Invoke 'Copy-Item' -ModuleName 'M365DSCTools' -Times 0
+            Get-ModulesFromBlobStorage -ResourceGroupName 'M365DscResources' -StorageAccountName 'M365DscStorageAccount' -ContainerName 'M365DscContainer' -Version '1.23.530.1' | Should -Be $false
+            Should -Invoke 'Copy-Item' -ModuleName 'M365DSCTools' -Times 0
         }
     }
 }

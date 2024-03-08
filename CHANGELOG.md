@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Updated logging to new function in Add-ModulesToBlobStorage and Get-ModulesFromBlobStorage
+- Updated Add-ModulesToBlobStorage and Get-ModulesFromBlobStorage to return a boolean with
+  the result of the operation
+
 ## [0.2.3] - 2024-03-05
 
 - Fixed issue in Set-PipelineYaml where an exception was thrown when the Defaults

@@ -22,6 +22,7 @@ function Add-ModulesToBlobStorage
     Add-ModulesToBlobStorage -ResourceGroupName 'MyResourceGroup' -StorageAccountName 'MyStorageAccount' -ContainerName 'MyContainer'
 #>
     [CmdletBinding()]
+    [OutputType([System.Boolean])]
     param
     (
         # [Parameter(Mandatory = $true)]
@@ -105,6 +106,9 @@ function Add-ModulesToBlobStorage
     }
     else
     {
-        Write-Log -Object '[ERROR] Dependencies\Manifest.psd1 file not found'
+        Write-Log -Object '[ERROR] Dependencies\Manifest.psd1 file not found' -Failure
+        return $false
     }
+
+    return $true
 }
