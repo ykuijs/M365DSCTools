@@ -53,8 +53,9 @@ PowerShellVersion = '5.0'
 # Modules that must be imported into the global environment prior to importing this module
 RequiredModules = @(
     @{
-        ModuleName    = 'ObjectGraphTools'
-        ModuleVersion = '0.0.18'
+        ModuleName     = 'ObjectGraphTools'
+        ModuleVersion  = '0.0.18'
+        MaximumVersion = '0.0.99'
     }
     @{
         ModuleName    = 'powershell-yaml'
