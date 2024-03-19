@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.5] - 2024-03-19
 
+- Added required version range for ObjectGraphTools
+
+## [0.2.4] - 2024-03-19
+
 - Updated logging to new function in Add-ModulesToBlobStorage and Get-ModulesFromBlobStorage
 - Updated Add-ModulesToBlobStorage and Get-ModulesFromBlobStorage to return a boolean with
   the result of the operation
