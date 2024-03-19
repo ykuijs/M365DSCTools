@@ -336,7 +336,7 @@ function Set-ADOEnvironment
 
                     if ($checkInfo.timeout -ne $default.Timeout)
                     {
-                        Write-Log -Object '    Parameter Instructions changed, updating.'
+                        Write-Log -Object '    Parameter TimeOut changed, updating.'
                         $updateCheck = $true
                     }
 
