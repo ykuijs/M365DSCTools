@@ -368,8 +368,10 @@ function Set-ADOEnvironment
                     {
                         Write-Log -Object '    Updating check configuration'
                         $requestBody = ConvertTo-Json -InputObject $obj -Depth 10
+                        Write-Log -Object "    DEBUG: $requestBody"
 
                         $configUrl = '{0}/_apis/pipelines/checks/configurations/{2}?{1}' -f $devOpsProjectUrl, $apiVersionString, $checkId
+                        Write-Log -Object "    DEBUG: $configUrl"
                         if ($PSCmdlet.ShouldProcess('Configurations', 'Configure approvals'))
                         {
                             $null = Invoke-APRestApi -Uri $configUrl -Method 'PATCH' -Headers $headers -Body $requestBody
