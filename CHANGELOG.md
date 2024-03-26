@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   name wasn't converted properly
 - Fixed issue in Convert-M365DSCExportToPowerShellDataFile where multiple versions of
   M365DSC.CompositeResources being installed caused errors
+- Fixed issue in Set-ADOEnvironment where the checks weren't updating due to missing
+  check id parameter
 
 ## [0.2.5] - 2024-03-19
 

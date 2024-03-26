@@ -1,6 +1,6 @@
 function Set-ADOEnvironment
 {
-<#
+    <#
 .SYNOPSIS
     Checks if specified environments exist in Azure DevOps and creates them if they don't.
 
@@ -123,7 +123,7 @@ function Set-ADOEnvironment
     {
         Write-Log -Object '  Parameter PAT is specified, using that to authenticate'
         $authToken = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$($PAT)"))
-        $headers.Add("Authorization", ("Basic {0}" -f $authToken))
+        $headers.Add('Authorization', ('Basic {0}' -f $authToken))
     }
     else
     {
@@ -173,7 +173,7 @@ function Set-ADOEnvironment
         }
         $requestBody = ConvertTo-Json -InputObject $obj -Depth 10
 
-        if ($PSCmdlet.ShouldProcess($environment,'Create Environment'))
+        if ($PSCmdlet.ShouldProcess($environment, 'Create Environment'))
         {
             $null = Invoke-APRestApi -Uri $envUrl -Method 'POST' -Headers $headers -Body $requestBody
         }
@@ -284,12 +284,12 @@ function Set-ADOEnvironment
                 $checkId = $envChecks.value.Id
 
                 $checkUrl = "{0}/_apis/pipelines/checks/configurations/{2}?`$expand=settings&{1}" -f $devOpsProjectUrl, $apiVersionString, $checkId
-                Write-Log -Object "    DEBUG: $checkUrl"
                 $checkInfo = Invoke-APRestApi -Uri $checkUrl -Method 'GET' -Headers $headers
                 if ($null -ne $checkInfo)
                 {
                     $settings = $checkInfo.settings
                     $obj = @{
+                        id       = $checkId
                         type     = @{
                             id   = '8C6F20A7-A545-4486-9777-F762FAFE0D4D'
                             name = 'Approval'
@@ -368,11 +368,9 @@ function Set-ADOEnvironment
                     {
                         Write-Log -Object '    Updating check configuration'
                         $requestBody = ConvertTo-Json -InputObject $obj -Depth 10
-                        Write-Log -Object "    DEBUG: $requestBody"
 
                         $configUrl = '{0}/_apis/pipelines/checks/configurations/{2}?{1}' -f $devOpsProjectUrl, $apiVersionString, $checkId
-                        Write-Log -Object "    DEBUG: $configUrl"
-                        if ($PSCmdlet.ShouldProcess('Configurations','Configure approvals'))
+                        if ($PSCmdlet.ShouldProcess('Configurations', 'Configure approvals'))
                         {
                             $null = Invoke-APRestApi -Uri $configUrl -Method 'PATCH' -Headers $headers -Body $requestBody
                         }
@@ -419,7 +417,7 @@ function Set-ADOEnvironment
 
                 Write-Log -Object '  Creating check'
                 $configUrl = '{0}/_apis/pipelines/checks/configurations?{1}' -f $devOpsProjectUrl, $apiVersionString
-                if ($PSCmdlet.ShouldProcess('Configurations','Create approvals'))
+                if ($PSCmdlet.ShouldProcess('Configurations', 'Create approvals'))
                 {
                     $null = Invoke-APRestApi -Uri $configUrl -Method 'POST' -Headers $headers -Body $requestBody
                 }
@@ -439,7 +437,7 @@ function Set-ADOEnvironment
         {
             Write-Log -Object '    Permissions not provided. Granting permissions!'
             $body = "{ 'pipelines':[{'id': $($pipeline.id), 'authorized': true}] }"
-            if ($PSCmdlet.ShouldProcess($DeploymentPipeline,'Granting pipeline permissions'))
+            if ($PSCmdlet.ShouldProcess($DeploymentPipeline, 'Granting pipeline permissions'))
             {
                 $null = Invoke-APRestApi -Uri $permissionsUrl -Method 'PATCH' -Headers $headers -Body $body
             }
@@ -452,7 +450,7 @@ function Set-ADOEnvironment
                 if ($permission.id -ne $pipeline.id -or $permission.authorized -ne $true)
                 {
                     $body = "{ 'pipelines':[{'id': $($pipeline.id), 'authorized': true}] }"
-                    if ($PSCmdlet.ShouldProcess($DeploymentPipeline,'Granting pipeline permissions'))
+                    if ($PSCmdlet.ShouldProcess($DeploymentPipeline, 'Granting pipeline permissions'))
                     {
                         $null = Invoke-APRestApi -Uri $permissionsUrl -Method 'PATCH' -Headers $headers -Body $body
                     }
