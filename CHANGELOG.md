@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   M365DSC.CompositeResources being installed caused errors
 - Fixed issue in Set-ADOEnvironment where the checks weren't updating due to missing
   check id parameter
+- Fixed issue with diacritic characters in Set-ADOEnvironment
 
 ## [0.2.5] - 2024-03-19
 

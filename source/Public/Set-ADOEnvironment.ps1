@@ -130,7 +130,6 @@ function Set-ADOEnvironment
         Write-Log -Object '  Parameter PAT is NOT specified, using environment variable SYSTEM_ACCESSTOKEN to authenticate'
         $headers.Add('Authorization', ('Bearer {0}' -f $env:SYSTEM_ACCESSTOKEN))
     }
-    $headers.Add('Content-Type', 'application/json')
 
     # https://learn.microsoft.com/en-us/rest/api/azure/devops/distributedtask/environments/list?view=azure-devops-rest-7.1
     Write-Log -Object 'Retrieving all environments'
@@ -368,10 +367,8 @@ function Set-ADOEnvironment
                     {
                         Write-Log -Object '    Updating check configuration'
                         $requestBody = ConvertTo-Json -InputObject $obj -Depth 10
-                        Write-Log -Object "    DEBUG: $requestBody"
 
                         $configUrl = '{0}/_apis/pipelines/checks/configurations/{2}?{1}' -f $devOpsProjectUrl, $apiVersionString, $checkId
-                        Write-Log -Object "    DEBUG: $configUrl"
                         if ($PSCmdlet.ShouldProcess('Configurations', 'Configure approvals'))
                         {
                             $null = Invoke-APRestApi -Uri $configUrl -Method 'PATCH' -Headers $headers -Body $requestBody

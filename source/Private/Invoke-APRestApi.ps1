@@ -1,6 +1,6 @@
 function Invoke-APRestApi
 {
-<#
+    <#
 .SYNOPSIS
     Executes an API call to Azure DevOps.
 
@@ -55,8 +55,9 @@ function Invoke-APRestApi
     try
     {
         $params = @{
-            Uri    = $Uri
-            Method = $Method
+            Uri         = $Uri
+            Method      = $Method
+            ContentType = 'application/json;charset=utf-8'
         }
 
         if ($PSBoundParameters.ContainsKey('Headers'))
