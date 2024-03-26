@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Made the approval settings in Set-ADOEnvironment configurable
+
 ## [0.2.6] - 2024-03-26
 
 - Corrected typo in logging in Set-ADOEnvironment
