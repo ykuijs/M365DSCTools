@@ -93,7 +93,27 @@ function Set-ADOEnvironment
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $DeploymentPipeline
+        $DeploymentPipeline,
+
+        [Parameter()]
+        [System.String]
+        $ExecutionOrder = 'anyOrder',
+
+        [Parameter()]
+        [System.String]
+        $Instructions = 'Please approve if you agree with the deployment.',
+
+        [Parameter()]
+        [System.Int32]
+        $MinRequiredApprovers = 1,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequesterCannotBeApprover = $false,
+
+        [Parameter()]
+        [System.Int32]
+        $Timeout = 14400
     )
 
     #region Variables
@@ -103,11 +123,11 @@ function Set-ADOEnvironment
     $apiVersionString = "api-version=$ApiVersion"
 
     $default = @{
-        ExecutionOrder            = 'anyOrder'
-        Instructions              = 'Please approve if you agree with the deployment.'
-        MinRequiredApprovers      = 1
-        RequesterCannotBeApprover = $true
-        Timeout                   = 14400
+        ExecutionOrder            = $ExecutionOrder
+        Instructions              = $Instructions
+        MinRequiredApprovers      = $MinRequiredApprovers
+        RequesterCannotBeApprover = $RequesterCannotBeApprover
+        Timeout                   = $Timeout
     }
 
     $approversDetails = @{}
