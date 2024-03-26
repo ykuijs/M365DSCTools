@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.6] - 2024-03-26
+
 - Corrected typo in logging in Set-ADOEnvironment
 - Improved logging in Set-ADOEnvironment
 - Fixed issue in Convert-M365DSCExportToPowerShellDataFile where resources with "Profile" in the
