@@ -5,7 +5,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Made the approval settings in Set-ADOEnvironment configurable
+### Changed
+
+- Updated Set-ADOEnvironment to make the approval settings configurable
 
 ## [0.2.6] - 2024-03-26
 
