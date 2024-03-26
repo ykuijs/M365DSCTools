@@ -5,6 +5,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Corrected typo in logging in Set-ADOEnvironment
+- Improved logging in Set-ADOEnvironment
+- Fixed issue in Convert-M365DSCExportToPowerShellDataFile where resources with "Profile" in the
+  name wasn't converted properly
+- Fixed issue in Convert-M365DSCExportToPowerShellDataFile where multiple versions of
+  M365DSC.CompositeResources being installed caused errors
+
 ## [0.2.5] - 2024-03-19
 
 - Added required version range for ObjectGraphTools

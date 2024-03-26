@@ -94,7 +94,8 @@ function Convert-M365DSCExportToPowerShellDataFile
         $Obj_Export = Get-Content $Path_JsonReport | ConvertFrom-Json
 
         # Load Example data from module M365DSC.CompositeResources
-        $Obj_M365DataExample = Import-PSDataFile (((Get-Module -ListAvailable M365DSC.CompositeResources).path | Split-Path) + '\M365ConfigurationDataExample.psd1')
+        $M365DSCCRModule = Get-Module -ListAvailable M365DSC.CompositeResources | Sort-Object -Property Version | Select-Object -Last 1
+        $Obj_M365DataExample = Import-PSDataFile (Join-Path -Path ($M365DSCCRModule.Path | Split-Path) -ChildPath 'M365ConfigurationDataExample.psd1')
 
         # Group Object
         $Obj_Export_Groups = $Obj_Export | Group-Object 'resourcename'
@@ -110,7 +111,8 @@ function Convert-M365DSCExportToPowerShellDataFile
                                 -replace "^$($Workload | Convert-M365WorkLoadName )" `
                                 -replace '(?<!y)$', '[s]*' `
                                 -replace 'y$', '(y|ies)' `
-                                -replace 'Policy', 'Policies'
+                                -replace 'Policy', 'Policies' `
+                                -replace 'Profile', 'Profiles'
                         ) ) }
                 $Obj_Conversion.Composite_Resource_Name = $Composite_Resource.Name
 

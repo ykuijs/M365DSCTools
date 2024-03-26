@@ -312,31 +312,31 @@ function Set-ADOEnvironment
 
                     if ($settings.instructions -ne $default.Instructions)
                     {
-                        Write-Log -Object '    Parameter Instructions changed, updating.'
+                        Write-Log -Object "    Parameter Instructions changed, updating. Old: $($settings.instructions), New: $($default.Instructions)"
                         $updateCheck = $true
                     }
 
                     if ($settings.requesterCannotBeApprover -ne $default.RequesterCannotBeApprover)
                     {
-                        Write-Log -Object '    Parameter RequesterCannotBeApprover changed, updating.'
+                        Write-Log -Object "    Parameter RequesterCannotBeApprover changed, updating. Old: $($settings.requesterCannotBeApprover), New: $($default.RequesterCannotBeApprover)"
                         $updateCheck = $true
                     }
 
                     if ($settings.executionOrder -ne $default.ExecutionOrder)
                     {
-                        Write-Log -Object '    Parameter ExecutionOrder changed, updating.'
+                        Write-Log -Object "    Parameter ExecutionOrder changed, updating. Old: $($settings.executionOrder), New: $($default.ExecutionOrder)"
                         $updateCheck = $true
                     }
 
                     if ($settings.minRequiredApprovers -ne $default.MinRequiredApprovers)
                     {
-                        Write-Log -Object '    Parameter MinRequiredApprovers changed, updating.'
+                        Write-Log -Object "    Parameter MinRequiredApprovers changed, updating. Old: $($settings.minRequiredApprovers), New: $($default.MinRequiredApprovers)"
                         $updateCheck = $true
                     }
 
                     if ($checkInfo.timeout -ne $default.Timeout)
                     {
-                        Write-Log -Object '    Parameter TimeOut changed, updating.'
+                        Write-Log -Object "    Parameter TimeOut changed, updating. Old: $($checkInfo.timeout), New: $($default.Timeout)"
                         $updateCheck = $true
                     }
 
@@ -345,11 +345,13 @@ function Set-ADOEnvironment
                         $approversDiff = Compare-Object -ReferenceObject $settings.approvers.id -DifferenceObject $approversDetails.$envName.Descriptor
                         if ($null -ne $approversDiff)
                         {
+                            Write-Log -Object '    Approvers changed, updating.'
                             $updateCheck = $true
                         }
                     }
                     else
                     {
+                        Write-Log -Object '    Approvers changed, updating.'
                         $updateCheck = $true
                     }
 
