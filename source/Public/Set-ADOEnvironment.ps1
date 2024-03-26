@@ -31,6 +31,21 @@ function Set-ADOEnvironment
     The name of the pipeline that should be granted permissions to access
     the environment.
 
+.PARAMETER ExecutionOrder
+    The execution order of the approvals.
+
+.PARAMETER Instructions
+    The instructions to be displayed to the approvers.
+
+.PARAMETER MinRequiredApprovers
+    The minimum number of approvers required.
+
+.PARAMETER RequesterCannotBeApprover
+    If the requester cannot be an approver.
+
+.PARAMETER Timeout
+    The timeout for the approval.
+
 .EXAMPLE
     $environmentsConfig = @{
         'testenv' = @(
