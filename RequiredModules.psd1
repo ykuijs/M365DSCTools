@@ -16,5 +16,5 @@
     'Sampler.GitHubTasks'       = 'latest'
     'PowerShellGet'             = 'latest'
     'powershell-yaml'           = 'latest'
-    'ObjectGraphTools'          = '0.0.20' # Make sure you also update the module manifest with the correct version ranges
+    'ObjectGraphTools'          = '0.1.1' # Make sure you also update the module manifest with the correct version ranges
 }

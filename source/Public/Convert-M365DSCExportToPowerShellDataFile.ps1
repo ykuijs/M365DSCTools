@@ -141,7 +141,7 @@ function Convert-M365DSCExportToPowerShellDataFile
         }
 
         #  Get All leaf nodes
-        $InputNode = Get-Node -InputObject $Obj_Result
+        $InputNode = $Obj_Result | Get-Node
         $LeafNodes = $InputNode | Get-ChildNode -Recurse -Leaf
 
         # Exclude Keys
