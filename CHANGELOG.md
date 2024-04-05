@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated code to support ObjectGraphTools v0.1.0 and higher
 
+### Fixed
+
+- Fixed issue with importing data file in Convert-M365DSCExportToPowerShellDataFile
+
 ## [0.2.7] - 2024-03-26
 
 ### Changed

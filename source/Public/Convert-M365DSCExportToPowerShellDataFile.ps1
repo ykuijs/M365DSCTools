@@ -95,7 +95,7 @@ function Convert-M365DSCExportToPowerShellDataFile
 
         # Load Example data from module M365DSC.CompositeResources
         $M365DSCCRModule = Get-Module -ListAvailable M365DSC.CompositeResources | Sort-Object -Property Version | Select-Object -Last 1
-        $Obj_M365DataExample = Import-PSDataFile (Join-Path -Path ($M365DSCCRModule.Path | Split-Path) -ChildPath 'M365ConfigurationDataExample.psd1')
+        $Obj_M365DataExample = Import-PSDataFile -Path (Join-Path -Path ($M365DSCCRModule.Path | Split-Path) -ChildPath 'M365ConfigurationDataExample.psd1').ToString()
 
         # Group Object
         $Obj_Export_Groups = $Obj_Export | Group-Object 'resourcename'
