@@ -12,6 +12,7 @@
         "markdownissues.txt": true
     },
     "files.trimTrailingWhitespace": true,
+    "files.encoding": "utf8",
     "powershell.codeFormatting.addWhitespaceAroundPipe": true,
     "powershell.codeFormatting.alignPropertyValuePairs": true,
     "powershell.codeFormatting.autoCorrectAliases": true,
