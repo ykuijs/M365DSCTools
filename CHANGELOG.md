@@ -5,6 +5,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- New Test-IfModulesInBlobStorage that tests if a package exists in the Azure Blob
+  Storage for the specified Microsoft365DSC version
+
 ## [0.2.8] - 2024-04-05
 
 ### Changed
