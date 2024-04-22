@@ -140,5 +140,3 @@ function Test-M365MandatoryPowershellDataFile {
 
     }
 }
-
-
