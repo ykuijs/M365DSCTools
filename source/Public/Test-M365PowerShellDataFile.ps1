@@ -23,8 +23,14 @@ function Test-M365PowershellDataFile
  .Parameter Exclude_AvailableAsResource
   All items that are available as a resource and have to be ignored.
 
-  .Example
+ .Parameter IgnoreRequired
+  Specifies that the Required parameters should not be checked. Used with the individual data files.
+
+ .Example
    Test-M365PowershellDataFile -InputObject $M365DSCData -PesterScript
+
+ .Example
+   Test-M365PowershellDataFile -InputObject $M365DSCData -PesterScript -IgnoreRequired
 #>
     [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '')]
@@ -43,7 +49,11 @@ function Test-M365PowershellDataFile
 
         [Parameter()]
         [System.Array]
-        $Exclude_AvailableAsResource
+        $Exclude_AvailableAsResource,
+
+        [Parameter()]
+        [Switch]
+        $IgnoreRequired
     )
 
     begin
@@ -92,13 +102,8 @@ function Test-M365PowershellDataFile
 
                                 foreach ( $Item in $Required.name )
                                 {
-                                    if ( $Available -notcontains $Item -and $Exclude_Required -notContains $item )
+                                    if ( $Available -notcontains $Item -and $Exclude_Required -notContains $item -and $PSBoundParameters.ContainsKey('IgnoreRequired') -eq $false )
                                     {
-                                        # if ( $Available -notcontains $Item -and $Exclude -notContains $item ) {
-                                        if ($item -eq 'UniqueId')
-                                        {
-                                            #'"   [-] Fix UniqueID "| write-host -ForegroundColor Yellow' -f $_.parentnode.pathname, $Item
-                                        }
                                         "      `$InputObject.{0}.{1} | Should -Not -BeNullOrEmpty -Because 'parameter {1} is required for {0}'" -f $_.parentnode.pathname, $Item
                                     }
                                 }
@@ -121,7 +126,7 @@ function Test-M365PowershellDataFile
                             }
 
                             # No Ref data
-                            if ( -not $Obj_Ref.type)
+                            if (-not $Obj_Ref.type)
                             {
                                 '"   [-] {0} [not availabe as a Composite Resource]"| write-host -ForegroundColor darkyellow' -f $_.Pathname
                             }

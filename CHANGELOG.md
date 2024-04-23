@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New Test-IfModulesInBlobStorage that tests if a package exists in the Azure Blob
   Storage for the specified Microsoft365DSC version
 
+### Changed
+
+- Updated the Test-M365PowerShellDataFile function to allow specifying to disable checking
+  for Required parameters. This is specifically useful for individual, not yet merged, data
+  files. There required parameters could not exist, because they are coming from a different file.
+
 ### Fixed
 
 - Fixed issue in Convert-M365DSCExportToPowerShellDataFile where parameter in ConvertTo-Expression
