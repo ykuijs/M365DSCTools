@@ -20,11 +20,11 @@ function Test-M365MandatoryPowershellDataFile {
  .Parameter PesterScript
   Specify if the created Pester scripts will be displayed or not.
 
+ .Parameter Verbosity
+  Specify Output verbosity: 'None', 'Detailed', 'Diagnostic'
+
  .Parameter NotAllowedMandatory
   All items Mandatory object are not allowed in the input object.
-
- .Parameter RequiredMandatory
-  All items Mandatory object must be present and have the right value.
 
  .Example
     Test-M365MandatoryPowershellDataFile -InputObject $M365DSCData -PesterScript
@@ -33,8 +33,7 @@ function Test-M365MandatoryPowershellDataFile {
     $MandatoryObject = Import-PSDataFile '%Filename%.psd1'
 
     $InputObject | Test-M365MandatoryPowershellDataFile -MandatoryObject $MandatoryObject -PesterScript
-    $InputObject | Test-M365MandatoryPowershellDataFile -MandatoryObject $MandatoryObject -RequiredMandatory -PesterScript
-    $InputObject | Test-M365MandatoryPowershellDataFile -MandatoryObject $MandatoryObject -NotAllowedMandatory -PesterScript
+   $InputObject | Test-M365MandatoryPowershellDataFile -MandatoryObject $MandatoryObject -NotAllowedMandatory -PesterScript
 #>
 
     [CmdletBinding()]
@@ -43,100 +42,106 @@ function Test-M365MandatoryPowershellDataFile {
         [Parameter(Mandatory = $true, ValueFromPipeline = $True)]$InputObject,
         [Parameter(Mandatory = $true)]$MandatoryObject,
         [Parameter(Mandatory = $False)][array]$Keys = @('UniqueId', 'Identity', 'NodeName', 'Id'),
-        [Parameter(Mandatory = $False, ParameterSetName = 'NotAllowedMandatory')][Switch]$NotAllowedMandatory,
-        [Parameter(Mandatory = $False, ParameterSetName = 'RequiredMandatory')][Switch]$RequiredMandatory,
+        [Parameter(Mandatory = $False)][ValidateSet('None', 'Detailed', 'Diagnostic')][string]$Verbosity = 'Detailed',
+        [Parameter(Mandatory = $False)][Switch]$NotAllowedMandatory,
         [Parameter(Mandatory = $False)][Switch]$PesterScript
     )
-    $Pester_Config = @(
 
-        '#Requires -Modules Pester'
-        "Describe '--- Check M365-DSC-Mandatory configuration settings ---' {"
+    begin {}
 
-        #NonNodeData
-        $Node_Mandatory_NonNodeData = $MandatoryObject | get-node 'NonNodedata'
+    process {
+        $Pester_Config = @(
+
+            '#Requires -Modules Pester'
+            "Describe '--- Check M365-DSC-Mandatory configuration settings ---' {"
+
+            #NonNodeData
+            $Node_Mandatory_NonNodeData = $MandatoryObject | get-node 'NonNodedata'
             ( $Node_Mandatory_NonNodeData | Get-ChildNode).ForEach{
-            "  Context '{0}' {{" -f $_.name
+                "  Context '{0}' {{" -f $_.name
                 ($_ | Get-ChildNode).foreach{
-                "    It '{0}' {{" -f $_.name
-                # Get parrent Leaf nodes
-                $Nodes_Mandatory_Path = ( $_ | Get-Node ~*=*..).path
+                    "    It '{0}' {{" -f $_.name
+                    # Get parrent Leaf nodes
+                    $Nodes_Mandatory_Path = ( $_ | Get-Node ~*=*..).path
 
-                foreach ( $Node_Mandatory_Path in $Nodes_Mandatory_Path) {
-                    #Leaf Siblings
-                    $LeafCollection = $MandatoryObject | get-node $($Node_Mandatory_Path.ToString())
-                    $LeafCollection_ChildNodes = $leafcollection | Get-ChildNode
+                    foreach ( $Node_Mandatory_Path in $Nodes_Mandatory_Path) {
+                        #Leaf Siblings
+                        $LeafCollection = $MandatoryObject | get-node $($Node_Mandatory_Path.ToString())
+                        $LeafCollection_ChildNodes = $leafcollection | Get-ChildNode
 
-                    $Indexer_Mandatory = $LeafCollection_ChildNodes | Where-Object { $keys -contains $_.Name }
-                    if ($Indexer_Mandatory) { '      # {0} = "{1}"' -f $Indexer_Mandatory.name, $Indexer_Mandatory.value }
+                        $Indexer_Mandatory = $LeafCollection_ChildNodes | Where-Object { $keys -contains $_.Name }
+                        if ($Indexer_Mandatory) { '      # {0} = "{1}"' -f $Indexer_Mandatory.name, $Indexer_Mandatory.value }
 
-                    $LeafCollection_ChildNodes.foreach{
-                        [array]$Found = $InputObject | get-node $($_.path.ToString() -Replace ('\[\d*\]', ''))
+                        $LeafCollection_ChildNodes.foreach{
+                            [array]$Found = $InputObject | get-node $($_.path.ToString() -Replace ('\[\d*\]', ''))
 
-                        # Single Instance type en 1 node Found
-                        if ( -not $Indexer_Mandatory -and ($Found.count -eq 1 )) {
-                            if ($NotAllowedMandatory ) { "      `$InputObject.{0} | Should -Be `$null -Because 'it is a Mandatory Setting and not allowed'" -f $_.path, $_.Value }
-                            else { "      `$InputObject.{0} | Should -Be {1} -Because 'it is a Mandatory Setting'" -f $_.path, $_.Value }
-                        }
-
-                        if ( -not $Indexer_Mandatory -and ($Found.count -gt 1 )) {
-                            '"   [-]  `$InputObject.{0} No index key sibling found in Mandatory: {1}"| write-host -ForegroundColor darkyellow' -f $($_.path), $($keys -join ';')
-                        }
-
-                        # Multiple Instance
-                        if ($Indexer_Mandatory) {
-                            $M_Index_Path = $Indexer_Mandatory.path.ToString() -Replace ('\[\d*\]', '')
-                            $Leaf_node = $InputObject | get-node "$M_Index_Path=$($Indexer_Mandatory.value)..$($_.name)"
-
-                            # Multiple Instance Leaf node found with index
-                            if ($Leaf_node) {
-                                if ($NotAllowedMandatory ) { "      `$InputObject.{0} | Should -Be `$null -Because 'it is a Mandatory Setting and not Allowed'" -f $Leaf_node.path, $($_.value) }
-                                else { "      `$InputObject.{0} | Should -Be {1} -Because 'it is a Mandatory Setting'" -f $Leaf_node.path, $($_.value) }
+                            # Single Instance type en 1 node Found
+                            if ( -not $Indexer_Mandatory -and ($Found.count -eq 1 )) {
+                                if ($NotAllowedMandatory ) { "      `$InputObject.{0} | Should -Be `$null -Because 'it is a Mandatory Setting and not allowed'" -f $_.path, $_.Value }
+                                else { "      `$InputObject.{0} | Should -Be {1} -Because 'it is a Mandatory Setting'" -f $_.path, $_.Value }
                             }
-                            elseif ($RequiredMandatory) {
-                                #'{0}' -f $($_.path.ToString()) | Write-Host
-                                "      `$MandatoryObject.{0} | Should -Be 'In InputObject' -Because 'Mandatory Setting is not found'" -f $($_.path.ToString())
+
+                            if ( -not $Indexer_Mandatory -and ($Found.count -gt 1 )) {
+                                '"   [-]  `$InputObject.{0} No index key sibling found in Mandatory: {1}"| write-host -ForegroundColor darkyellow' -f $($_.path), $($keys -join ';')
+                            }
+
+                            # Multiple Instance
+                            if ($Indexer_Mandatory) {
+                                $M_Index_Path = $Indexer_Mandatory.path.ToString() -Replace ('\[\d*\]', '')
+                                $Leaf_node = $InputObject | get-node "$M_Index_Path=$($Indexer_Mandatory.value)..$($_.name)"
+
+                                # Multiple Instance Leaf node found with index
+                                if ($Leaf_node) {
+                                    if ($NotAllowedMandatory ) { "      `$InputObject.{0} | Should -Be `$null -Because 'it is a Mandatory Setting and not Allowed'" -f $Leaf_node.path, $($_.value) }
+                                    else { "      `$InputObject.{0} | Should -Be {1} -Because 'it is a Mandatory Setting'" -f $Leaf_node.path, $($_.value) }
+                                }
+                                else {
+                                    "      `$MandatoryObject.{0} | Should -Be 'In InputObject' -Because 'Mandatory Setting is not found'" -f $($_.path.ToString())
+                                }
                             }
                         }
                     }
+                    '    }'
                 }
-                '    }'
+                '  }'
             }
-            '  }'
+            '}'
+        )
+
+        # Save for execute
+        $Pester_Script = New-TemporaryFile | Rename-Item -NewName { [IO.Path]::ChangeExtension($_, '.tests.ps1') } -PassThru
+        $Pester_Config | Out-File $Pester_Script -Force -Confirm:$false -Encoding:ascii
+
+        # Show Result Pester Script in a VScode window
+        if ($PesterScript) { psedit $Pester_Script }
+
+        # Execute pester script
+        $Params = [ordered]@{
+            Path = $Pester_Script
         }
-        '}'
-    )
 
-    # Save for execute
-    $Pester_Script = New-TemporaryFile | Rename-Item -NewName { [IO.Path]::ChangeExtension($_, '.tests.ps1') } -PassThru
-    $Pester_Config | Out-File $Pester_Script -Force -Confirm:$false -Encoding:ascii
+        $Container = New-PesterContainer @Params
 
-    # Show Result Pester Script in a VScode window
-    if ($PesterScript) { psedit $Pester_Script }
+        $Configuration = [PesterConfiguration]@{
+            Run    = @{
+                Container = $Container
+                PassThru  = $true
+            }
+            Should = @{
+                ErrorAction = 'continue'
+            }
+            Output = @{
+                Verbosity           = $Verbosity
+                StackTraceVerbosity = 'Firstline'
+            }
+        }
 
-    # Execute pester script
-    $Params = [ordered]@{
-        Path = $Pester_Script
+        $Result = Invoke-Pester -Configuration $Configuration
+
+        # Clean temp file
+        Remove-Item -Path $Pester_Script -Force -ErrorAction SilentlyContinue
+
+        return $result
     }
-
-    $Container = New-PesterContainer @Params
-
-    $Configuration = [PesterConfiguration]@{
-        Run    = @{
-            Container = $Container
-            PassThru  = $true
-        }
-        Should = @{
-            ErrorAction = 'continue'
-        }
-        Output = @{
-            Verbosity           = 'Detailed'
-            StackTraceVerbosity = 'Firstline'
-        }
-    }
-
-    Invoke-Pester -Configuration $Configuration | Out-Null
-
-    # Clean temp file
-    Remove-Item -Path $Pester_Script -Force -ErrorAction SilentlyContinue
 }
 

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - New Test-IfModulesInBlobStorage that tests if a package exists in the Azure Blob
   Storage for the specified Microsoft365DSC version
+- New Test-M365MandatoryPowershellDataFile to test InputObject to MandatoryObject
 
 ### Fixed
 
