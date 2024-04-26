@@ -30,7 +30,7 @@ Describe Test-M365MandatoryPowershellDataFile {
         $PesterPreference = [PesterConfiguration]::Default
         #$PesterPreference.Run.PassThru = $True
         $PesterPreference.Output.Verbosity = 'Detailed'
-        $PesterPreference.Output.Verbosity = 'Firstline'
+        $PesterPreference.Output.StackTraceVerbosity = "Firstline"
         #$PesterPreference.Should = 'continue'
 
         $InputObject =  @{
