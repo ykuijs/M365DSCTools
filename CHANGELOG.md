@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Storage for the specified Microsoft365DSC version
 - New Test-M365MandatoryPowershellDataFile to test InputObject to MandatoryObject
 
+### Changed
+
+- Updated the Test-M365PowerShellDataFile function to allow specifying to disable checking
+  for Required parameters. This is specifically useful for individual, not yet merged, data
+  files. There required parameters could not exist, because they are coming from a different file.
+
 ### Fixed
 
 - Fixed issue in Convert-M365DSCExportToPowerShellDataFile where parameter in ConvertTo-Expression
