@@ -19,9 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed issue in Convert-M365DSCExportToPowerShellDataFile where parameter in ConvertTo-Expression
-  has been removed.
+  has been removed
 - Corrected pipeline yaml output where the file was encoded as UTF8 instead of UTF8 with BOM. Now
-  code always outputs UTF8 with BOM.
+  code always outputs UTF8 with BOM
 
 ## [0.2.8] - 2024-04-05
 

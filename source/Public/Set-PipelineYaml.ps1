@@ -120,7 +120,7 @@ function Set-PipelineYaml
                 $envParameter.default = $defaults
                 if ($PSCmdlet.ShouldProcess($YamlPath, 'Update Yaml file'))
                 {
-                    ConvertTo-Yaml $yamlObj | Out-File -FilePath $file -Encoding utf8 -Force
+                    ConvertTo-Yaml $yamlObj | Out-File -FilePath $YamlPath -Encoding utf8 -Force
                 }
             }
             else
