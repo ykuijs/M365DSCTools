@@ -1,27 +1,27 @@
-# BeforeAll {
-#     $script:moduleName = 'M365DSCTools'
+BeforeAll {
+    $script:moduleName = 'M365DSCTools'
 
-#     # If the module is not found, run the build task 'noop'.
-#     if (-not (Get-Module -Name $script:moduleName -ListAvailable)) {
-#         # Redirect all streams to $null, except the error stream (stream 2)
-#         & "$PSScriptRoot/../../build.ps1" -Tasks 'noop' > $null
-#     }
+    # If the module is not found, run the build task 'noop'.
+    if (-not (Get-Module -Name $script:moduleName -ListAvailable)) {
+        # Redirect all streams to $null, except the error stream (stream 2)
+        & "$PSScriptRoot/../../build.ps1" -Tasks 'noop' > $null
+    }
 
-#     # Re-import the module using force to get any code changes between runs.
-#     Import-Module -Name $script:moduleName -Force -ErrorAction 'Stop'
+    # Re-import the module using force to get any code changes between runs.
+    Import-Module -Name $script:moduleName -Force -ErrorAction 'Stop'
 
-#     $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:moduleName
-#     $PSDefaultParameterValues['Mock:ModuleName'] = $script:moduleName
-#     $PSDefaultParameterValues['Should:ModuleName'] = $script:moduleName
-# }
+    $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:moduleName
+    $PSDefaultParameterValues['Mock:ModuleName'] = $script:moduleName
+    $PSDefaultParameterValues['Should:ModuleName'] = $script:moduleName
+}
 
-# AfterAll {
-#     $PSDefaultParameterValues.Remove('Mock:ModuleName')
-#     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
-#     $PSDefaultParameterValues.Remove('Should:ModuleName')
+AfterAll {
+    $PSDefaultParameterValues.Remove('Mock:ModuleName')
+    $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
+    $PSDefaultParameterValues.Remove('Should:ModuleName')
 
-#     Remove-Module -Name $script:moduleName
-# }
+    Remove-Module -Name $script:moduleName
+}
 
 Describe Test-M365MandatoryPowershellDataFile {
     BeforeAll {
