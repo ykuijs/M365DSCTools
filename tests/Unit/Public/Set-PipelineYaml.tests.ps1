@@ -66,6 +66,7 @@ Describe Set-PipelineYaml {
             Mock -CommandName Test-Path -MockWith { return $true }
             Mock -CommandName Get-Content -MockWith {}
             Mock -CommandName ConvertTo-Yaml -MockWith {}
+            Mock -CommandName Out-File -MockWith {}
         }
 
         It 'Should create and configure all environments in ADO' {
@@ -119,7 +120,7 @@ Describe Set-PipelineYaml {
             Mock -CommandName ConvertFrom-Yaml -MockWith {
                 return @{}
             }
-            
+
             $results = Set-PipelineYaml -YamlPath 'C:\Source\Pipelines\template.yaml' -EnvironmentsInfo $envInfo
             $results | Should -Be $false
         }
@@ -134,7 +135,7 @@ Describe Set-PipelineYaml {
                     )
                 }
             }
-            
+
             $results = Set-PipelineYaml -YamlPath 'C:\Source\Pipelines\template.yaml' -EnvironmentsInfo $envInfo
             $results | Should -Be $false
         }
