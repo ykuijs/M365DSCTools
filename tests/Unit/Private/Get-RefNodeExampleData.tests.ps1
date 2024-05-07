@@ -11,7 +11,6 @@ $ProjectName = ((Get-ChildItem -Path $ProjectPath\*\*.psd1).Where{
             } )
     }).BaseName
 
-
 Import-Module $ProjectName
 
 InModuleScope $ProjectName {
@@ -29,18 +28,18 @@ InModuleScope $ProjectName {
                     }
                 }
 
-                if (-not ([System.Management.Automation.PSTypeName]'PSNode').Type)
-                {
-                    Import-Module ObjectGraphTools -Force
-                }
+                Remove-Module M365DSCTools, ObjectGraphTools
+                Import-Module ObjectGraphTools
 
-                $node = [PSNode]::ParseInput($exampleData, 20)
+                $node = Get-Node -InputObject $exampleData
                 $leafnode = $node._("NonNodeData")._("Office365")._("OrgSettings")._("ToDoIsPushNotificationEnabled")
 
                 $result = Get-RefNodeExampleData -Node $leafnode -ReferenceObject $exampleData
                 $result.Description | Should -Be "To Do - Allow your users to receive push notifications."
                 $result.Type | Should -Be "Boolean"
                 $result.Required | Should -Be "Optional"
+
+                Remove-Module M365DSCTools, ObjectGraphTools
             }
         }
     }

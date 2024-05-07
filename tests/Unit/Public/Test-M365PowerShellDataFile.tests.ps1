@@ -26,6 +26,10 @@ AfterAll {
 
 Describe Test-M365PowershellDataFile {
     BeforeAll {
+        $PesterPreference = [PesterConfiguration]::Default
+        $PesterPreference.Output.Verbosity = 'Detailed'
+        $PesterPreference.Output.StackTraceVerbosity = "Firstline"
+
         Mock -CommandName Get-Module -MockWith { return @{ Path = 'C:\Temp\module.psd1'} }
         Mock -CommandName Import-PSDataFile -MockWith {
             return @{
@@ -39,6 +43,7 @@ Describe Test-M365PowershellDataFile {
                     'Teams' = @{
                         Resource2 = @(
                             @{
+                                UniqueId = 'String | Required | Required String'
                                 Item3 = 'Boolean | Required | Required Boolean'
                                 Item4 = 'Guid | Optional | Optional Guid'
                             }
@@ -50,7 +55,7 @@ Describe Test-M365PowershellDataFile {
     }
 
     Context 'Test function Test-M365PowershellDataFile' {
-        It 'Should successfully test the inputted object' {
+        It 'Should successfully test of the inputted object' {
             $Object = @{
                 NonNodeData = @{
                     'Exchange' = @{
@@ -63,24 +68,50 @@ Describe Test-M365PowershellDataFile {
                         Resource2 = @(
                             @{
                                 UniqueId = "Test"
+                                Item3 = $true
                                 Item4 = 'c25d6579-be90-4484-81ef-9280d4817440'
                             }
                             @{
-                                Item5 = "Test2"
-                                Item6 = 'c25d6579-be90-4484-81ef-9280d4817440'
+                                UniqueId = "Test2"
+                                Item3 = $false
+                                Item4 = 'c25d6579-be90-4484-81ef-9280d4817441'
                             }
                         )
                     }
                 }
             }
 
-            # Mock Out-File to prevent an issue with an updated hashtable
-            Mock -CommandName Out-File -MockWith {
-                Add-Content -Value 'Write-Verbose "test"' -Path $FilePath
+            $result = Test-M365PowershellDataFile -InputObject $Object -Verbosity None
+            $result.Result | Should -Be 'Passed'
+        }
+
+        It 'Should fail test of the inputted object' {
+            $Object = @{
+                NonNodeData = @{
+                    'Exchange' = @{
+                        Resource1 = @{
+                            Item1 = 'String'
+                            Item2 = 5
+                        }
+                    }
+                    'Teams' = @{
+                        Resource2 = @(
+                            @{
+                                UniqueId = "Test"
+                                Item3 = $true
+                                Item4 = 'c25d6579-be90-4484-81ef-9280d4817440'
+                            }
+                            @{
+                                UniqueId = "Test2"
+                                Item5 = $false
+                            }
+                        )
+                    }
+                }
             }
 
-            Test-M365PowershellDataFile -InputObject $Object
-            Should -Invoke -CommandName Out-File
+            $result = Test-M365PowershellDataFile -InputObject $Object -Verbosity None
+            $result.Result | Should -Be 'Failed'
         }
     }
 }

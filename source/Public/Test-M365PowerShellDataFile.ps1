@@ -17,6 +17,9 @@ function Test-M365PowershellDataFile
  .Parameter PesterScript
   Specify if the created Pester scripts will be displayed or not.
 
+ .Parameter Verbosity
+  Specify Output verbosity: 'None', 'Detailed', 'Diagnostic'
+
  .Parameter Exclude_Required
   All required items that have to be ignored, for example the UniqueID parameter.
 
@@ -42,6 +45,11 @@ function Test-M365PowershellDataFile
         [Parameter()]
         [Switch]
         $PesterScript,
+
+        [Parameter(Mandatory = $False)]
+        [ValidateSet('None', 'Detailed', 'Diagnostic')]
+        [System.String]
+        $Verbosity = 'Detailed',
 
         [Parameter()]
         [System.Array]
@@ -168,7 +176,7 @@ function Test-M365PowershellDataFile
                 ErrorAction = "continue"
             }
             Output = @{
-                Verbosity           = 'Detailed'
+                Verbosity           = $Verbosity
                 StackTraceVerbosity = "Firstline"
             }
         }
