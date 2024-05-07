@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.10] - 2024-05-07
+
 ### Fixed
 
 - Fixed several issues in Test-M365MandatoryPowershellDataFile, which caused the NotAllowedMandatory
