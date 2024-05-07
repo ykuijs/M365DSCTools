@@ -5,6 +5,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed several issues in Test-M365MandatoryPowershellDataFile, which caused the NotAllowedMandatory
+  parameter not to work
+
 ## [0.2.9] - 2024-05-07
 
 ### Added
