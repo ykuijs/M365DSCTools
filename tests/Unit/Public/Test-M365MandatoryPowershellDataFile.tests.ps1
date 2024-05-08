@@ -44,7 +44,7 @@ Describe Test-M365MandatoryPowershellDataFile {
         }
 
         $Data1 = @{ NonNodeData=@{ Exchange=@{ Resource1=@{Item2=5 } } } }
-        $Data2 = @{ NonNodeData = @{ Teams = @{ Resource2 = @(@{ UniqueID = 'Test2'; Item6 = 'c25d6579-be90-4484-81ef-9280d4817440' }) } } }
+        $Data2 = @{ NonNodeData = @{ Teams = @{ Resource2 = @(@{ UniqueID = 'Test2'; Item4 = 'c25d6579-be90-4484-81ef-9280d4817440' }) } } }
     }
 
     Context 'Pester Test-M365MandatoryPowershellDataFile' {
