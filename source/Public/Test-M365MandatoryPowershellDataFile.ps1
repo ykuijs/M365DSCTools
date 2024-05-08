@@ -96,56 +96,59 @@ function Test-M365MandatoryPowershellDataFile
                         $LeafCollection = $MandatoryObject | Get-Node $($Node_Mandatory_Path.ToString())
                         $LeafCollection_ChildNodes = $leafcollection | Get-ChildNode
 
-                        $Indexer_Mandatory = $LeafCollection_ChildNodes | Where-Object { $keys -contains $_.Name }
+                        $Indexer_Mandatory = $LeafCollection_ChildNodes | Where-Object { $Keys -contains $_.Name }
                         if ($Indexer_Mandatory)
                         {
                             '      # {0} = "{1}"' -f $Indexer_Mandatory.Name, $Indexer_Mandatory.Value
                         }
 
                         $LeafCollection_ChildNodes.ForEach{
-                            [array]$Found = $InputObject | Get-Node $($_.Path.ToString() -Replace ('\[\d*\]', ''))
-
-                            # Single Instance type en 1 node Found
-                            if ( -not $Indexer_Mandatory -and ($Found.Count -eq 1 ))
+                            if ($_.Name -notin $Keys)
                             {
-                                if ($NotAllowedMandatory)
-                                {
-                                    "      `$InputObject.{0} | Should -BeNullOrEmpty -Because '{1} is a Mandatory Setting and not allowed in the data file'" -f $_.Path, $_.Name
-                                }
-                                else
-                                {
-                                    "      `$InputObject.{0} | Should -Be {1} -Because '{2} is a Mandatory Setting'" -f $_.Path, $_.Value, $_.Name
-                                }
-                            }
+                                [array]$Found = $InputObject | Get-Node $($_.Path.ToString() -Replace ('\[\d*\]', ''))
 
-                            if (-not $Indexer_Mandatory -and ($Found.Count -gt 1 ))
-                            {
-                                '"   [-]  `$InputObject.{0} No index key sibling found in Mandatory: {1}"| write-host -ForegroundColor darkyellow' -f $($_.Path), $($keys -join ';')
-                            }
-
-                            # Multiple Instance
-                            if ($Indexer_Mandatory)
-                            {
-                                $M_Index_Path = $Indexer_Mandatory.Path.ToString() -Replace ('\[\d*\]', '')
-                                $Leaf_node = $InputObject | Get-Node "$M_Index_Path=$($Indexer_Mandatory.Value)..$($_.Name)"
-
-                                # Multiple Instance Leaf node found with index
-                                if ($Leaf_node)
+                                # Single Instance type en 1 node Found
+                                if (-not $Indexer_Mandatory -and ($Found.Count -eq 1))
                                 {
                                     if ($NotAllowedMandatory)
                                     {
-                                        "      `$InputObject.{0} | Should -BeNullOrEmpty -Because '{1} is a Mandatory Setting and not Allowed in the data file'" -f $Leaf_node.Path, $_.Name
+                                        "      `$InputObject.{0} | Should -BeNullOrEmpty -Because '{1} is a Mandatory Setting and not allowed in the data file'" -f $_.Path, $_.Name
                                     }
                                     else
                                     {
-                                        "      `$InputObject.{0} | Should -Be {1} -Because '{2} is a Mandatory Setting'" -f $Leaf_node.Path, $($_.Value), $_.Name
+                                        "      `$InputObject.{0} | Should -Be {1} -Because '{2} is a Mandatory Setting'" -f $_.Path, $_.Value, $_.Name
                                     }
                                 }
-                                else
+
+                                if (-not $Indexer_Mandatory -and ($Found.Count -gt 1))
                                 {
-                                    if (-not $NotAllowedMandatory)
+                                    '"   [-]  `$InputObject.{0} No index key sibling found in Mandatory: {1}"| write-host -ForegroundColor darkyellow' -f $($_.Path), $($Keys -join ';')
+                                }
+
+                                # Multiple Instance
+                                if ($Indexer_Mandatory)
+                                {
+                                    $M_Index_Path = $Indexer_Mandatory.Path.ToString() -Replace ('\[\d*\]', '')
+                                    $Leaf_node = $InputObject | Get-Node "$M_Index_Path=$($Indexer_Mandatory.Value)..$($_.Name)"
+
+                                    # Multiple Instance Leaf node found with index
+                                    if ($Leaf_node)
                                     {
-                                        "      `$InputObject.{0} | Should -Not -BeNullOrEmpty -Because '{1} is a Mandatory Setting'" -f $($_.Path.ToString()), $_.Name
+                                        if ($NotAllowedMandatory)
+                                        {
+                                            "      `$InputObject.{0} | Should -BeNullOrEmpty -Because '{1} is a Mandatory Setting and not Allowed in the data file'" -f $Leaf_node.Path, $_.Name
+                                        }
+                                        else
+                                        {
+                                            "      `$InputObject.{0} | Should -Be {1} -Because '{2} is a Mandatory Setting'" -f $Leaf_node.Path, $($_.Value), $_.Name
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (-not $NotAllowedMandatory)
+                                        {
+                                            "      `$InputObject.{0} | Should -Not -BeNullOrEmpty -Because '{1} is a Mandatory Setting'" -f $($_.Path.ToString()), $_.Name
+                                        }
                                     }
                                 }
                             }
