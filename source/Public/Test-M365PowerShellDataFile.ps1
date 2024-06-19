@@ -94,7 +94,7 @@ function Test-M365PowershellDataFile
                 ($_ | Get-ChildNode).foreach{
                     "    It '{0}' {{" -f $_.name
 
-                    ($_ | Get-ChildNode -Recurse -Leaf).ForEach{
+                    ($_ | Get-ChildNode -Recurse -Leaf -WarningAction 'SilentlyContinue').ForEach{
 
                         # First Time in this parent Leaf node
                         if ( $Leaf_Parents -notcontains ($_.parentnode.PathName) )

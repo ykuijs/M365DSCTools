@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated Test-M365MandatoryPowershellDataFile to filter key parameters for testing.
   This is to make sure you can specify some properties of an object without tests
   failing because the key parameter exists
+- Updated Test-M365PowershellDataFile to make sure warning are suppressed from Get-ChildNode
+- Updated Set-ADOEnvironment to skip configuring checks on environments that are not
+  specified in the TargetEnvironments parameter
 
 ## [0.2.10] - 2024-05-07
 

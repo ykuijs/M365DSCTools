@@ -305,6 +305,12 @@ function Set-ADOEnvironment
         $envId = $environment.id
         $envName = $environment.Name
 
+        if ($TargetEnvironments -notcontains $envName)
+        {
+            Write-Log -Object "  Environment '$envName' is not in the target environments, skipping."
+            continue
+        }
+
         # https://learn.microsoft.com/en-us/rest/api/azure/devops/approvalsandchecks/check-configurations/get?view=azure-devops-rest-7.1
         $envChecksUrl = '{0}/_apis/pipelines/checks/configurations?resourceType=environment&resourceId={2}&{1}' -f $devOpsProjectUrl, $apiVersionString, $envId
         $envChecks = $null
