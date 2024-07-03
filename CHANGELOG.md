@@ -5,6 +5,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed issue in Convert-M365DSCExportToPowerShellDataFile where the created data file
+  was in ASCII format, causing special characters to be displayed incorrectly.
+
 ## [0.2.11] - 2024-06-19
 
 ### Changed

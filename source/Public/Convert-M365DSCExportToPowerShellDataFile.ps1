@@ -158,7 +158,7 @@ function Convert-M365DSCExportToPowerShellDataFile
         # Check if data is available
         if ($Obj_Result.NonNodeData.$Workload)
         {
-            $Obj_Result | ConvertTo-Expression -Depth 20 -Expand 20 | Out-File $Path_CompositeConfig -Force -Confirm:$false -Encoding ascii
+            $Obj_Result | ConvertTo-Expression -Depth 20 -Expand 20 | Out-File $Path_CompositeConfig -Force -Confirm:$false -Encoding UTF8
             'Result Composite config created: {0}' -f $Path_CompositeConfig | Write-Log
         }
         else
