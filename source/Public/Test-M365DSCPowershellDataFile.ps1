@@ -56,6 +56,7 @@ Function Test-M365DSCPowershellDataFile {
 
     #>
     [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingInvokeExpression', '',Justification='Need Invoke Expression for performance, input is validated')]
     param (
         [Parameter(Mandatory = $true)]
         [ValidateSet('TypeValue', 'Required', 'Mandatory', 'TypeValue/Required', 'TypeValue/Mandatory', 'Required/Mandatory', 'TypeValue/Required/Mandatory' )]
