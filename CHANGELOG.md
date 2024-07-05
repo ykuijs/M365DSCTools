@@ -5,6 +5,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Function Test-M365DSCPowershellDataFile added as replacement for Test-M365PowershellDataFile
+
 ## [0.2.12] - 2024-07-03
 
 ### Fixed
@@ -12,8 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed issue in Convert-M365DSCExportToPowerShellDataFile where the created data file
   was in ASCII format, causing special characters to be displayed incorrectly.
 
-### Changed
-- Function Test-M365DSCPowershellDataFile added as replacement for Test-M365PowershellDataFile
 
 ## [0.2.11] - 2024-06-19
 
