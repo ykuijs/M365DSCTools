@@ -56,7 +56,7 @@ Function Test-M365DSCPowershellDataFile {
 
     #>
     [CmdletBinding()]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingInvokeExpression', '',Justification='Need Invoke Expression for performance, input is validated')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingInvokeExpression', '', Justification = 'Need Invoke Expression for performance, input is validated')]
     param (
         [Parameter(Mandatory = $true)]
         [ValidateSet('TypeValue', 'Required', 'Mandatory', 'TypeValue/Required', 'TypeValue/Mandatory', 'Required/Mandatory', 'TypeValue/Required/Mandatory' )]
@@ -136,13 +136,13 @@ Function Test-M365DSCPowershellDataFile {
         function ShowElapsed {
             param( [Switch]$Reset )
             if ($Reset) {
-                $global:TotalTime = get-date
-                $global:ElapsedTime = get-date
+                $script:TotalTime = get-date
+                $script:ElapsedTime = get-date
             }
-            if (-not $global:TotalTime ) { $global:TotalTime = get-date }
-            if (-not $global:ElapsedTime ) { $global:ElapsedTime = get-date }
+            if (-not $script:TotalTime ) { $script:TotalTime = get-date }
+            if (-not $script:ElapsedTime ) { $script:ElapsedTime = get-date }
             $Result = '^ Elapsed: {0} TotalTime: {1} seconds' -f "$(($(get-date) - $ElapsedTime).TotalSeconds) Seconds".PadRight(30, " ") , ($(get-date) - $TotalTime).TotalSeconds
-            $global:ElapsedTime = Get-date
+            $script:ElapsedTime = Get-date
             return $Result
         }
 
@@ -155,13 +155,15 @@ Function Test-M365DSCPowershellDataFile {
         function Test-IsGuid {
             [CmdletBinding()][OutputType([bool])]
             param([Parameter(Mandatory = $true, ValueFromPipeline = $True)][string]$StringGuid)
-            try {
-                $ObjectGuid = [System.Guid]::Empty
-                return [System.Guid]::TryParse($StringGuid, [ref]$ObjectGuid)
-            }
-            catch {
-                Write-Error "An error occurred while checking the GUID format: $_"
-                return $false
+            process {
+                try {
+                    $ObjectGuid = [System.Guid]::Empty
+                    return [System.Guid]::TryParse($StringGuid, [ref]$ObjectGuid)
+                }
+                catch {
+                    Write-Error "An error occurred while checking the GUID format: $_"
+                    return $false
+                }
             }
         }
 
@@ -214,7 +216,7 @@ Function Test-M365DSCPowershellDataFile {
                 $HashKey = if ($Exclude_A.Length) { "#" } else { "" }
 
                 if ($Node.count -eq 0 ) { return }
-                if ( $node.Depth -le 3 ) { '   {0}It "{1}" {2}{{' -f $(space $node.depth), $Node.path, $(if ($Exclude_A.Length) { "-skip" }   )}
+                if ( $node.Depth -le 3 ) { '   {0}It "{1}" {2}{{' -f $(space $node.depth), $Node.path, $(if ($Exclude_A.Length) { "-skip" }   ) }
 
 
                 if ((-not $IsArray) -and (-not $IsHashTable) -and ($Test -like "*TypeValue*")) {
@@ -264,7 +266,7 @@ Function Test-M365DSCPowershellDataFile {
 
     }
     process {
-        $global:TotalTime = get-date
+        $script:TotalTime = get-date
         ShowElapsed  -Reset | out-null
         '-- Function Test-M365DSCPowershellDataFile ------------------------------ ' | Write-log
         'Tests selected: {0}' -f $Test | write-log
