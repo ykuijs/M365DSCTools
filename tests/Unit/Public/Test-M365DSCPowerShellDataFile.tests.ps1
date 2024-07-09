@@ -31,6 +31,7 @@ Describe Test-M365DSCPowershellDataFile {
         $PesterPreference.Output.StackTraceVerbosity = "Firstline"
 
         Mock -CommandName Get-Module -MockWith { return @{ Path = 'C:\Temp\module.psd1'} }
+        Mock -CommandName Write-Log -MockWith {}
         Mock -CommandName Import-PSDataFile -MockWith {
             return @{
                 NonNodeData = @{
