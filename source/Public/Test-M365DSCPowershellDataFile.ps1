@@ -121,6 +121,11 @@ Function Test-M365DSCPowershellDataFile {
         $Exclude_AvailableAsResource = $PSboundParameters['Exclude_AvailableAsResource']
         $Exclude_Required = $PSboundParameters['Exclude_Required']
 
+        # Test if the ObjectGraphTools module is loaded and the class is available
+        if (-not ([System.Management.Automation.PSTypeName]'PSNode').Type) {
+            Import-Module ObjectGraphTools -Force
+        }
+
         Class M365DSC_Reference_Values {
             [string]$Type
             [string]$Required
