@@ -4,7 +4,8 @@ $DSC_ExcludeKeys = @(
     'ApplicationId',
     'CertificateThumbprint',
     'TenantId',
-    'IsSingleInstance'
+    'IsSingleInstance',
+    'CIMInstance'
 )
 
 function Convert-M365DSCExportToPowerShellDataFile

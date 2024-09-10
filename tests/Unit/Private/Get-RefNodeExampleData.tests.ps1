@@ -32,7 +32,7 @@ InModuleScope $ProjectName {
                 Import-Module ObjectGraphTools
 
                 $node = Get-Node -InputObject $exampleData
-                $leafnode = $node._("NonNodeData")._("Office365")._("OrgSettings")._("ToDoIsPushNotificationEnabled")
+                $leafnode = $node | Get-Node NonNodeData.Office365.OrgSettings.ToDoIsPushNotificationEnabled
 
                 $result = Get-RefNodeExampleData -Node $leafnode -ReferenceObject $exampleData
                 $result.Description | Should -Be "To Do - Allow your users to receive push notifications."

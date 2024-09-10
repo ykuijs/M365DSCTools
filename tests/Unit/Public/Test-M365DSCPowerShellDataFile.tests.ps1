@@ -82,7 +82,7 @@ Describe Test-M365DSCPowershellDataFile {
                 }
             }
 
-            $result = Test-M365DSCPowershellDataFile -Test TypeValue -InputObject $Object -Verbosity None
+            $result = Test-M365DSCPowershellDataFile -Test TypeValue -InputObject $Object -pesterVerbosity None -pesterOutputObject
             $result.Result | Should -Be 'Passed'
         }
 
@@ -111,7 +111,7 @@ Describe Test-M365DSCPowershellDataFile {
                 }
             }
 
-            $result = Test-M365DSCPowershellDataFile -Test TypeValue -InputObject $Object -Verbosity None
+            $result = Test-M365DSCPowershellDataFile -Test TypeValue -InputObject $Object -pesterVerbosity None -pesterOutputObject
             $result.Result | Should -Be 'Failed'
         }
     }

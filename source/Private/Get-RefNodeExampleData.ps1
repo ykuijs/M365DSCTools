@@ -30,7 +30,7 @@ function Get-RefNodeExampleData
 
     process
     {
-        $ExecuteCommand = '$ReferenceObject.{0}' -f $($Node.PathName -Replace '\[\d*\](?=(\.|$))')
+        $ExecuteCommand = '$ReferenceObject.{0}' -f $($Node.Path -Replace '\[\d*\](?=(\.|$))')
         $Result = $($ExecutionContext.InvokeCommand.InvokeScript('{0}' -f $ExecuteCommand ))
 
         if ($result)

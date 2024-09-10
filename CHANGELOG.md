@@ -5,6 +5,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added CIMInstance key to the exclusion list for Convert-M365DSCExportToPowerShellDataFile
+
+### Changed
+
+- Updated ObjectGraphTools requirement to v0.2 and higher
+
+### Removed
+
+- Removed two old and obsolete functions Test-M365MandatoryPowerShellDataFile and
+  Test-M365PowerShellDataFile. These are replaced with Test-M365DSCPowerShellDataFile.
+
 ## [0.3.0] - 2024-07-09
 
 ### Added
