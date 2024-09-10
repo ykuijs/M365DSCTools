@@ -24,27 +24,24 @@ function Test-M365DSCPowershellDataFile
     .Parameter MandatoryAction
     Action Type for test Mandatory 'Present', 'Absent'
 
-    .Parameter excludeAvailableAsResource
+    .Parameter ExcludeAvailableAsResource
     All items that are available as a resource and have to be ignored.  ( wildcards can be uses )
 
-    .Parameter excludeRequired
+    .Parameter ExcludeRequired
     Required items have to be ignored. ( no wildcards )
 
-    .Parameter Ignore_AllRequired
-    If specified, all required items will be ignored.
-
-    .Parameter pesterVerbosity
+    .Parameter PesterVerbosity
     Specifies the verbosity level of the output. Allowed values are:
     None', 'Detailed', 'Diagnostic'. Default is 'Detailed'.
 
-    .Parameter pesterStackTraceVerbosity
+    .Parameter PesterStackTraceVerbosity
     Specifies the verbosity level of the output. Allowed values are:
     'None', 'FirstLine', 'Filtered', 'Full'. Default is 'Firstline'.
 
-    .Parameter pesterShowScript
+    .Parameter PesterShowScript
     If specified, the generated Pester script will be opened in an editor.
 
-    .Parameter pesterOutputObject
+    .Parameter PesterOutputObject
     If specified, the executed Pester script result will returned.
 
     .Example
@@ -52,9 +49,9 @@ function Test-M365DSCPowershellDataFile
 
     Test-M365DSCPowershellDataFile -Test TypeValue, Required `
     -InputObject $InputObject `
-    -excludeAvailableAsResource *CimInstance, *UniqueID, *IsSingleInstance `
-    -excludeRequired CimInstance, UniqueID `
-    -pesterShowScript
+    -ExcludeAvailableAsResource *CimInstance, *UniqueID, *IsSingleInstance `
+    -ExcludeRequired CimInstance, UniqueID `
+    -PesterShowScript
 
     .Example
     $InputObject = Import-PSDataFile -path '%Filename_InputObject%.psd1'
@@ -64,9 +61,9 @@ function Test-M365DSCPowershellDataFile
     -InputObject $InputObject `
     -MandatoryObject $MandatoryObject `
     -MandatoryAction Present `
-    -excludeAvailableAsResource *CimInstance, *UniqueID, *IsSingleInstance `
-    -excludeRequired CimInstance, UniqueID `
-    -pesterShowScript
+    -ExcludeAvailableAsResource *CimInstance, *UniqueID, *IsSingleInstance `
+    -ExcludeRequired CimInstance, UniqueID `
+    -PesterShowScript
 
 
     .NOTES
@@ -99,33 +96,29 @@ function Test-M365DSCPowershellDataFile
 
         [Parameter(Mandatory = $False)]
         [String[]]
-        $excludeAvailableAsResource,
+        $ExcludeAvailableAsResource,
 
         [Parameter(Mandatory = $False)]
         [String[]]
-        $excludeRequired,
-
-        [Parameter(Mandatory = $False)]
-        [Switch]
-        $Ignore_AllRequired,
+        $ExcludeRequired,
 
         [Parameter(Mandatory = $False)]
         [ValidateSet('None', 'Detailed', 'Diagnostic')]
         [String]
-        $pesterVerbosity = 'Detailed',
+        $PesterVerbosity = 'Detailed',
 
         [Parameter(Mandatory = $False)]
         [ValidateSet('None', 'FirstLine', 'Filtered', 'Full')]
         [String]
-        $pesterStackTraceVerbosity = 'FirstLine',
+        $PesterStackTraceVerbosity = 'FirstLine',
 
         [Parameter(Mandatory = $False)]
         [Switch]
-        $pesterShowScript,
+        $PesterShowScript,
 
         [Parameter(Mandatory = $False)]
         [Switch]
-        $pesterOutputObject
+        $PesterOutputObject
     )
 
     begin
@@ -165,7 +158,6 @@ function Test-M365DSCPowershellDataFile
 
             return $result
         }
-
         # Function to test if a string is a valid GUID
         function Test-IsGuid
         {
@@ -244,9 +236,10 @@ function Test-M365DSCPowershellDataFile
         {
             param
             (
-                [psnode]$MandatoryObject
+                [Parameter()]
+                [psnode]
+                $MandatoryObject
             )
-
             $MandatoryLeafs = $MandatoryObject | get-childnode -Recurse -Leaf
             $MandatoryLeafs.foreach{
                 if ($MandatoryAction -eq 'Absent')
@@ -259,12 +252,18 @@ function Test-M365DSCPowershellDataFile
                 }
             }
         }
+
         function Create_PesterNode
         {
             param
             (
-                [psnode]$nodeObject,
-                [switch]$recursive
+                [Parameter()]
+                [psnode]
+                $nodeObject,
+
+                [Parameter()]
+                [switch]
+                $recursive
             )
 
             $refNodePath = '{0}' -f $($nodeObject.Path) -replace '\[\d+\]', '[0]'
@@ -311,13 +310,27 @@ function Test-M365DSCPowershellDataFile
                     {
                         foreach ($objRequiredNode in $objRequiredNodes)
                         {
-                            if ($objRequiredNode.name -notin $excludeRequired )
+                            if ($objRequiredNode -is [psleafnode])
                             {
-                                "`$inputObject.{0}.{1} | should -not -BeNullOrEmpty -Because 'Required setting'" -f $nodeObject.path, $objRequiredNode.name
+                                if ($objRequiredNode.name -notin $excludeRequired)
+                                {
+                                    "`$inputObject.{0} | should -not -BeNullOrEmpty -Because 'Required setting'" -f $nodeObject.path
+                                }
+                                else
+                                {
+                                    "#`$inputObject.{0} | should -not -BeNullOrEmpty -Because 'Required setting'" -f $nodeObject.path
+                                }
                             }
                             else
                             {
-                                "#`$inputObject.{0}.{1} | should -not -BeNullOrEmpty -Because 'Required setting'" -f $nodeObject.path, $objRequiredNode.name
+                                if ($objRequiredNode.name -notin $excludeRequired)
+                                {
+                                    "`$inputObject.{0}.{1} | should -not -BeNullOrEmpty -Because 'Required setting'" -f $nodeObject.path, $objRequiredNode.name
+                                }
+                                else
+                                {
+                                    "#`$inputObject.{0}.{1} | should -not -BeNullOrEmpty -Because 'Required setting'" -f $nodeObject.path, $objRequiredNode.name
+                                }
                             }
                         }
                     }
@@ -355,6 +368,7 @@ function Test-M365DSCPowershellDataFile
             }
         }
     }
+
     process
     {
         $Typevalue = $False
@@ -440,7 +454,7 @@ function Test-M365DSCPowershellDataFile
 
                 '  }'
                 '  Context ''NonNodeData'' {'
-                foreach ($workload in ( $inputObject | get-node 'NonNodeData' | get-childnode ))
+                foreach ($workload in ($inputObject | Get-Node 'NonNodeData' | Get-ChildNode))
                 {
                     '    Context ''{0}'' {{' -f $workload.Path
                     '      It ''{0}'' {{' -f $workload.Path
@@ -448,7 +462,7 @@ function Test-M365DSCPowershellDataFile
                     '      }'
                     if ($workload -is [psCollectionNode])
                     {
-                        foreach ($workloadFolder in ($workload | get-childnode ))
+                        foreach ($workloadFolder in ($workload | Get-ChildNode))
                         {
                             '      It ''{0}'' {{' -f $workloadFolder.Path
                             Create_PesterNode -nodeObject $workloadFolder -recursive | ForEach-Object { '        {0}' -f $_ }
@@ -456,10 +470,9 @@ function Test-M365DSCPowershellDataFile
                         }
                     }
                     '    }'
-                    '  }'
                 }
+                '  }'
             }
-
             if ($Mandatory)
             {
                 '  Context ''Mandatory'' {'
@@ -468,7 +481,6 @@ function Test-M365DSCPowershellDataFile
                 '    }'
                 '  }'
             }
-
             '}'
         )
 
@@ -480,14 +492,20 @@ function Test-M365DSCPowershellDataFile
         try
         {
             # Ensure that $pesterConfig is defined before continuing
-            if (-not $pesterConfig) { throw "The variable `\$pesterConfig` is not defined." }
+            if (-not $pesterConfig)
+            {
+                throw "The variable `\$pesterConfig` is not defined."
+            }
 
             # Create a temporary Pester script file for test execution
             $pesterScriptPath = [System.IO.Path]::ChangeExtension((New-TemporaryFile).FullName, '.tests.ps1')
             $pesterConfig | Out-File -FilePath $pesterScriptPath -Force -Confirm:$false -Encoding ascii
 
             # Open the generated Pester script in Visual Studio Code
-            if ($pesterShowScript) { psedit $pesterScriptPath }
+            if ($pesterShowScript)
+            {
+                psedit $pesterScriptPath
+            }
 
             # Set parameters for the Pester container that manages the test execution
             $pesterParams = [ordered]@{ Path = $pesterScriptPath }
@@ -500,14 +518,13 @@ function Test-M365DSCPowershellDataFile
                 Output = @{ Verbosity = $pesterVerbosity ; StackTraceVerbosity = $pesterStackTraceVerbosity }
             }
 
-
             # Execute Pester tests and store results
             'Execute pesterscript' | Write-Log
             $pesterResult = Invoke-Pester -Configuration $pesterConfiguration
-            if ($pesterOutputObject) {
+            if ($PesterOutputObject)
+            {
                 return $pesterResult
             }
-
         }
         catch
         {

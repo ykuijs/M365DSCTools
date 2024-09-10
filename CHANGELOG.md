@@ -12,11 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Updated ObjectGraphTools requirement to v0.2 and higher
+- Updated Test-M365DSCPowershellDataFile to allow four scenarios: Test for type values, required parameters,
+  mandatory has to be present and mandatory has to be absent
 
 ### Removed
 
 - Removed two old and obsolete functions Test-M365MandatoryPowerShellDataFile and
-  Test-M365PowerShellDataFile. These are replaced with Test-M365DSCPowerShellDataFile.
+  Test-M365PowerShellDataFile. These are replaced with Test-M365DSCPowerShellDataFile
 
 ## [0.3.0] - 2024-07-09
 
