@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2024-09-10
+
 ### Added
 
 - Added CIMInstance key to the exclusion list for Convert-M365DSCExportToPowerShellDataFile
