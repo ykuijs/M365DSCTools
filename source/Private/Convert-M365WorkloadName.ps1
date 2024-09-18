@@ -8,6 +8,7 @@ $DSC_Workloads = @{
     'Planner'            = 'Planner'
     'PowerPlatform'      = 'PP'
     'SecurityCompliance' = 'SC'
+    'Sentinel'           = 'Sentinel'
     'SharePoint'         = 'SPO'
     'Teams'              = 'Teams'
 }

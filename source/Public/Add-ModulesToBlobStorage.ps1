@@ -44,6 +44,8 @@ function Add-ModulesToBlobStorage
 
     Write-Log -Object 'Upload Microsoft365DSC module dependencies to storage container'
 
+    $isPowerShellCore = $PSVersionTable.PSEdition -eq 'Core'
+
     Write-Log -Object "Connecting to storage account '$StorageAccountName'"
     $storageAcc = Get-AzStorageAccount -ResourceGroupName $ResourceGroupName -Name $StorageAccountName
 
@@ -77,6 +79,17 @@ function Add-ModulesToBlobStorage
         $data = Import-PowerShellDataFile -Path $dependenciesPath
         foreach ($dependency in $data.Dependencies)
         {
+            if ($dependency.PowerShellCore -and -not $isPowerShellCore)
+            {
+                Write-Verbose -Message "Skipping module {$($dependency.ModuleName)} as it is not compatible with Windows PowerShell."
+                continue
+            }
+            elseif ($dependency.PowerShellCore -eq $false -and $isPowerShellCore)
+            {
+                Write-Verbose -Message "Skipping module {$($dependency.ModuleName)} as it is not compatible with PowerShell Core."
+                continue
+            }
+
             Write-Log -Object ('Saving module {0} (v{1})' -f $dependency.ModuleName, $dependency.RequiredVersion)
             Save-Module -Name $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Path $savePath
         }
