@@ -129,7 +129,7 @@ Describe Test-M365DSCPowershellDataFile {
                             @{
                                 UniqueId = "Test"
                                 Item3 = $true
-                                Item4 = 'c25d6579-be90-4484-81ef-9280d4817440'
+                                Item5 = 'String'
                             }
                             @{
                                 UniqueId = "Test2"
