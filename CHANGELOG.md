@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.2] - 2024-10-01
+
 ### Fixed
 
 - Fixed bug in Test datafiles function to correctly test required parameters
