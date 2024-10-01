@@ -154,7 +154,7 @@ function Convert-M365DSCExportToPowerShellDataFile
         $Int_Nodes.ForEach{ $_.Value = [int]$_.Value }
 
         # Sort-object
-        $Obj_Result = $Obj_Result | Sort-ObjectGraph -PrimaryKey 'NodeName', 'Identity', 'UniqueId' -MaxDepth 20
+        $Obj_Result = $Obj_Result | Sort-ObjectGraph -PrimaryKey 'NodeName', 'Identity', 'UniqueId', 'SettingDefinitionId' -MaxDepth 20
 
         # Check if data is available
         if ($Obj_Result.NonNodeData.$Workload)

@@ -46,6 +46,7 @@ function Merge-Array
                     ($_.ContainsKey('UniqueId') -and $_.UniqueId -eq $item.UniqueId) -or `
                     ($_.ContainsKey('Identity') -and $_.Identity -eq $item.Identity) -or `
                     ($_.ContainsKey('Id') -and $_.Id -eq $item.Id) -or `
+                    ($_.ContainsKey('SettingDefinitionId') -and $_.SettingDefinitionId -eq $item.SettingDefinitionId) -or `
                     ($_.ContainsKey('NodeName') -and $_.NodeName -eq $item.NodeName)
                 }
 
