@@ -5,6 +5,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed bug in Test datafiles function to correctly test required parameters
+
+## [0.4.1] - 2024-09-18
+
+### Added
+
+- Added Sentinel workload support
+- Added code to only install dependencies that are needed for the used PowerShell version
+
 ## [0.4.0] - 2024-09-10
 
 ### Added

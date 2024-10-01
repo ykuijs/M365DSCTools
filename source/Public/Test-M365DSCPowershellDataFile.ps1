@@ -310,27 +310,13 @@ function Test-M365DSCPowershellDataFile
                     {
                         foreach ($objRequiredNode in $objRequiredNodes)
                         {
-                            if ($objRequiredNode -is [psleafnode])
+                            if ($objRequiredNode.name -notin $excludeRequired)
                             {
-                                if ($objRequiredNode.name -notin $excludeRequired)
-                                {
-                                    "`$inputObject.{0} | should -not -BeNullOrEmpty -Because 'Required setting'" -f $nodeObject.path
-                                }
-                                else
-                                {
-                                    "#`$inputObject.{0} | should -not -BeNullOrEmpty -Because 'Required setting'" -f $nodeObject.path
-                                }
+                                "`$inputObject.{0}.{1} | should -not -BeNullOrEmpty -Because 'Required setting'" -f $nodeObject.path, $objRequiredNode.name
                             }
                             else
                             {
-                                if ($objRequiredNode.name -notin $excludeRequired)
-                                {
-                                    "`$inputObject.{0}.{1} | should -not -BeNullOrEmpty -Because 'Required setting'" -f $nodeObject.path, $objRequiredNode.name
-                                }
-                                else
-                                {
-                                    "#`$inputObject.{0}.{1} | should -not -BeNullOrEmpty -Because 'Required setting'" -f $nodeObject.path, $objRequiredNode.name
-                                }
+                                "#`$inputObject.{0}.{1} | should -not -BeNullOrEmpty -Because 'Required setting'" -f $nodeObject.path, $objRequiredNode.name
                             }
                         }
                     }
