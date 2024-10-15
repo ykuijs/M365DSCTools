@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.3] - 2024-10-15
+
 ### Changed
 
 - Added SettingDefinitionId as a new value to merge items in an array, in addition to UniqueId,
