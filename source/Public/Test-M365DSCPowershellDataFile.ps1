@@ -200,12 +200,12 @@ function Test-M365DSCPowershellDataFile
             try
             {
                 switch ($type) {
-                    'SInt32' { return "should -match '^\d+$' -because 'Must be a positive Integer'" }
-                    'SInt64' { return "should -match '^\d+$' -because 'Must be a positive Integer'" }
-                    'UInt32' { return "should -BeOfType 'Int'" }
-                    'UInt64' { return "should -BeOfType 'Int'" }
-                    'Guid' { return "Test-IsGuid | should -Be 'True'" }
-                    default { return "should -BeOfType '$type'" }
+                    'SInt32' { return "Should -Match '^\d+$' -Because 'Must be a positive Integer'" }
+                    'SInt64' { return "Should -Match '^\d+$' -Because 'Must be a positive Integer'" }
+                    'UInt32' { return "Should -BeOfType 'Int'" }
+                    'UInt64' { return "Should -BeOfType 'Int'" }
+                    'Guid' { return "Test-IsGuid | Should -Be 'True'" }
+                    default { return "Should -BeOfType '$type'" }
                 }
             }
             catch
@@ -244,11 +244,11 @@ function Test-M365DSCPowershellDataFile
             $MandatoryLeafs.foreach{
                 if ($MandatoryAction -eq 'Absent')
                 {
-                    "`$inputObject.{0} | should -BeNullOrEmpty -because 'Denied Mandatory Setting'" -f $_.Path
+                    "`$inputObject.{0} | Should -BeNullOrEmpty -Because 'Denied Mandatory Setting'" -f $_.Path
                 }
                 else
                 {
-                    "`$inputObject.{0} | should -Be {1} -Because 'Mandatory Setting'" -f $_.Path, $_.Value
+                    "`$inputObject.{0} | Should -Be {1} -Because 'Mandatory Setting'" -f $_.Path, $_.Value
                 }
             }
         }
@@ -282,7 +282,7 @@ function Test-M365DSCPowershellDataFile
             # No Composite Resource available
             if ($null -eq $objRefNode)
             {
-                "`$inputObject.{0} | should -BeNullOrEmpty -because 'Not available as Composite Resource'" -f $nodeObject.Path
+                "`$inputObject.{0} | Should -BeNullOrEmpty -Because 'Not available as Composite Resource'" -f $nodeObject.Path
                 return
             }
 
@@ -294,11 +294,11 @@ function Test-M365DSCPowershellDataFile
                     [Bool]$isHashTable = $( $objRefNode.valueType.name -eq 'HashTable')
                     if ($isHashTable)
                     {
-                        "`$inputObject.{0} -is [HashTable] | should -BeTrue" -f $nodeObject.Path
+                        "`$inputObject.{0} -is [HashTable] | Should -BeTrue" -f $nodeObject.Path
                     }
                     else
                     {
-                        "`$inputObject.{0} -is [Array] | should -BeTrue " -f $nodeObject.Path
+                        "`$inputObject.{0} -is [Array] | Should -BeTrue " -f $nodeObject.Path
                     }
                 }
 
@@ -310,13 +310,21 @@ function Test-M365DSCPowershellDataFile
                     {
                         foreach ($objRequiredNode in $objRequiredNodes)
                         {
-                            if ($objRequiredNode.name -notin $excludeRequired)
+                            if ($objRequiredNode.Path -eq 'NonNodeData.Environment.CICD.DependsOn')
                             {
-                                "`$inputObject.{0}.{1} | should -not -BeNullOrEmpty -Because 'Required setting'" -f $nodeObject.path, $objRequiredNode.name
+                                # NonNodeData.Environment.CICD.DependsOn is required, but can be an empty value
+                                "`$inputObject.{0}{1} | Should -Not -Be `$null -Because 'Required setting'" -f $nodeObject.Path, $(if ( $objRequiredNode.Name -ne 0 ) { ".$($objRequiredNode.Name)" })
                             }
                             else
                             {
-                                "#`$inputObject.{0}.{1} | should -not -BeNullOrEmpty -Because 'Required setting'" -f $nodeObject.path, $objRequiredNode.name
+                                if ($objRequiredNode.Name -notin $excludeRequired)
+                                {
+                                    "`$inputObject.{0}{1} | Should -Not -BeNullOrEmpty -Because 'Required setting'" -f $nodeObject.Path, $(if ( $objRequiredNode.Name -ne 0 ) { ".$($objRequiredNode.Name)" })
+                                }
+                                else
+                                {
+                                    "#`$inputObject.{0}{1} | Should -Not -BeNullOrEmpty -Because 'Required setting'" -f $nodeObject.Path, $(if ( $objRequiredNode.Name -ne 0 ) { ".$($objRequiredNode.Name)" })
+                                }
                             }
                         }
                     }
@@ -348,7 +356,7 @@ function Test-M365DSCPowershellDataFile
                     # ValidationSet Validation
                     if ($objRefNodeValue.validateSet)
                     {
-                        "`$inputObject.{0} | should -beIn {1}" -f $nodeObject.path, $objRefNodeValue.validateSet
+                        "`$inputObject.{0} | Should -BeIn {1}" -f $nodeObject.path, $objRefNodeValue.validateSet
                     }
                 }
             }

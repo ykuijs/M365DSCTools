@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added SettingDefinitionId as a new value to merge items in an array, in addition to UniqueId,
   NodeName, Id and Identity
+- Added support for the new Azure, Azure DevOps and Defender workloads
+- Corrected issue in Required test in Test-M365DSCPowershellDataFile, where array
+  values were not checked properly.
 
 ## [0.4.2] - 2024-10-01
 
