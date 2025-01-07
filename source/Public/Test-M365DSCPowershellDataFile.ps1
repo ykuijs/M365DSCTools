@@ -399,6 +399,11 @@ function Test-M365DSCPowershellDataFile
                 throw "Cannot find module 'M365DSC.CompositeResources'"
             }
         }
+        if ($Module.Count -gt 1)
+        {
+            $Module = $Module | Sort-Object -Descending -Property Version | Select-Object -First 1
+            "Multiple versions of module M365DSC.CompositeResources found. Using newest version: $($Module.Version)" | Write-Log
+        }
         $pathM365DataExample = Join-Path -Path ($Module.path | Split-Path) -ChildPath 'M365ConfigurationDataExample.psd1'
         $objM365DataExample = Import-PSDataFile -path $pathM365DataExample.ToString()
 

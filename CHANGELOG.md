@@ -5,6 +5,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed bug in Test-M365DSCPowershellDataFile where the code would throw an error when
+  multiple versions of M365DSC.CompositeResources exist
+
 ## [0.4.3] - 2024-10-15
 
 ### Changed
