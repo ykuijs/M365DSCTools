@@ -25,10 +25,14 @@ function Test-M365DSCPowershellDataFile
     Action Type for test Mandatory 'Present', 'Absent'
 
     .Parameter ExcludeAvailableAsResource
-    All items that are available as a resource and have to be ignored.  ( wildcards can be uses )
+    All items that are available as a resource and have to be ignored.  ( wildcards can be used )
 
     .Parameter ExcludeRequired
     Required items have to be ignored. ( no wildcards )
+
+    .Parameter IncludeRequired
+    Required items that have to be checked. ( no wildcards )
+    To be used for the TypeValue test, mostly for the UniqueId parameter.
 
     .Parameter PesterVerbosity
     Specifies the verbosity level of the output. Allowed values are:
@@ -81,42 +85,46 @@ function Test-M365DSCPowershellDataFile
         [String[]]
         $Test,
 
-        [Parameter(Mandatory = $True)]
+        [Parameter(Mandatory = $true)]
         [System.Object]
         $InputObject,
 
-        [Parameter(Mandatory = $False )]
+        [Parameter()]
         [System.Object]
         $MandatoryObject,
 
-        [Parameter(Mandatory = $False )]
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [string]
         $MandatoryAction,
 
-        [Parameter(Mandatory = $False)]
+        [Parameter()]
         [String[]]
         $ExcludeAvailableAsResource,
 
-        [Parameter(Mandatory = $False)]
+        [Parameter()]
         [String[]]
         $ExcludeRequired,
 
-        [Parameter(Mandatory = $False)]
+        [Parameter()]
+        [String[]]
+        $IncludeRequired,
+
+        [Parameter()]
         [ValidateSet('None', 'Detailed', 'Diagnostic')]
         [String]
         $PesterVerbosity = 'Detailed',
 
-        [Parameter(Mandatory = $False)]
+        [Parameter()]
         [ValidateSet('None', 'FirstLine', 'Filtered', 'Full')]
         [String]
         $PesterStackTraceVerbosity = 'FirstLine',
 
-        [Parameter(Mandatory = $False)]
+        [Parameter()]
         [Switch]
         $PesterShowScript,
 
-        [Parameter(Mandatory = $False)]
+        [Parameter()]
         [Switch]
         $PesterOutputObject
     )
@@ -158,6 +166,7 @@ function Test-M365DSCPowershellDataFile
 
             return $result
         }
+
         # Function to test if a string is a valid GUID
         function Test-IsGuid
         {
@@ -270,7 +279,7 @@ function Test-M365DSCPowershellDataFile
             $objRefNode = $ht[$refNodePath]
 
             # Exclude nodes that match the patterns defined in $excludeAvailableAsResource
-            foreach ($Exclude in  $excludeAvailableAsResource)
+            foreach ($Exclude in $excludeAvailableAsResource)
             {
                 if ($nodeObject.Path -like $Exclude)
                 {
@@ -302,8 +311,8 @@ function Test-M365DSCPowershellDataFile
                     }
                 }
 
-                # Check for required
-                if ($Required)
+                # Check for required parameters
+                if ($Required -or $IncludeRequiredTest)
                 {
                     $objRequiredNodes = $htRequired["$($refNodePath)"]
                     if ($objRequiredNodes)
@@ -365,21 +374,29 @@ function Test-M365DSCPowershellDataFile
 
     process
     {
-        $Typevalue = $False
-        $Required = $False
-        $Mandatory = $False
+        $Typevalue = $false
+        $Required = $false
+        $IncludeRequiredTest = $false
+        $Mandatory = $false
 
         if ($Test -contains 'TypeValue')
         {
             $Typevalue = $true
+
+            # Check if the IncludeRequired parameter is specified
+            # If so, set the IncludeRequiredTest parameter to true
+            if ($PSBoundParameters.ContainsKey('IncludeRequired'))
+            {
+                $IncludeRequiredTest = $true
+            }
         }
         if ($Test -contains 'Required')
         {
-            $Required = $True
+            $Required = $true
         }
         if ($Test -contains 'Mandatory')
         {
-            $Mandatory = $True
+            $Mandatory = $true
             if (-not $MandatoryObject -or -not $MandatoryAction)
             {
                 throw 'Mandatory test needs the parameters MandatoryObject and MandatoryAction'
@@ -425,9 +442,27 @@ function Test-M365DSCPowershellDataFile
                     {
                         if ($_ -is [PSLeafnode])
                         {
-                            if ($_.value -match '\| Required \|')
+                            if ($_.Value -match '\| Required \|')
                             {
-                                $parentPath = $_.parentnode.path.ToString()
+                                $parentPath = $_.ParentNode.Path.ToString()
+                                if (-not $htRequired.Contains("$parentPath"))
+                                {
+                                    $htRequired["$parentPath"] = [System.Collections.Generic.List[psnode]]::new()
+                                }
+                                $htRequired["$parentPath"].add( $_ )
+                            }
+                        }
+                    }
+
+                    if ($Typevalue -and $IncludeRequiredTest)
+                    {
+                        # If IncludeRequired is specified, we should also check for the presence of UniqueId
+                        # when executing the TypeValue check
+                        if ($_ -is [PSLeafnode])
+                        {
+                            if ($_.Name -in $IncludeRequired -and $_.Value -match '\| Required \|')
+                            {
+                                $parentPath = $_.ParentNode.Path.ToString()
                                 if (-not $htRequired.Contains("$parentPath"))
                                 {
                                     $htRequired["$parentPath"] = [System.Collections.Generic.List[psnode]]::new()

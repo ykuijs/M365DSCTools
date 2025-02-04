@@ -12,7 +12,7 @@
     Pester                      = 'latest'
     ModuleBuilder               = 'latest'
     ChangelogManagement         = 'latest'
-    Sampler                     = 'latest'
+    Sampler                     = '0.118.1'
     'Sampler.GitHubTasks'       = 'latest'
     'PowerShellGet'             = 'latest'
     'powershell-yaml'           = 'latest'

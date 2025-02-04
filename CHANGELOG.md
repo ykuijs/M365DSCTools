@@ -5,6 +5,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added new IncludeRequired parameter for the TypeValue check. This because at TypeValue level,
+  we need the possibility to check the individual files for a required parameter. Specifically
+  the UniqueID parameter and the full required check cannot be executed yet.
+
 ### Fixed
 
 - Fixed bug in Test-M365DSCPowershellDataFile where the code would throw an error when
