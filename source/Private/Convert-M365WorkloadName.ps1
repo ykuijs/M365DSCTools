@@ -2,6 +2,7 @@ $DSC_Workloads = @{
     'AzureAD'            = 'AAD'
     'AzureDevOps'        = 'ADO'
     'Azure'              = 'Azure'
+    'Commerce'           = 'Commerce'
     'Defender'           = 'Defender'
     'Exchange'           = 'EXO'
     'Fabric'             = 'Fabric'
