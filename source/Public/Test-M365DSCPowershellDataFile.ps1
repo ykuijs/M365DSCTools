@@ -424,8 +424,6 @@ function Test-M365DSCPowershellDataFile
         $pathM365DataExample = Join-Path -Path ($Module.path | Split-Path) -ChildPath 'M365ConfigurationDataExample.psd1'
         $objM365DataExample = Import-PSDataFile -path $pathM365DataExample.ToString()
 
-        ShowElapsed | Write-Log -Debug
-
         'Create Hashtables for reference data ' | Write-Log
         [hashtable]$ht = @{}
         [hashtable]$htRequired = @{}
@@ -475,8 +473,6 @@ function Test-M365DSCPowershellDataFile
             }
         }
 
-        ShowElapsed | Write-Log -Debug
-
         'Create pester rules' | Write-Log
 
         $pesterConfig = @(
@@ -517,8 +513,6 @@ function Test-M365DSCPowershellDataFile
             }
             '}'
         )
-
-        ShowElapsed | Write-Log -Debug
 
         # Remove empty lines from the $pesterConfig variable
         $pesterConfig = $pesterConfig | Where-Object { $_.Trim() -ne '' }
@@ -584,7 +578,5 @@ function Test-M365DSCPowershellDataFile
             }
             'Pester[{0}]  Tests:{1}  Passed:{2}  Failed:{3} ' -f $pesterResult.version, $pesterResult.TotalCount, $pesterResult.PassedCount, $pesterResult.FailedCount | Write-Log @splat
         }
-
-        ShowElapsed | Write-Log -Debug
     }
 }
