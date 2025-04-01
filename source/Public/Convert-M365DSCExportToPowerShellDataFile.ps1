@@ -130,16 +130,25 @@ function Convert-M365DSCExportToPowerShellDataFile
         )
 
         # Compose file
-        $Obj_Result = @{NonNodeData = @{$Workload = @{} } }
+	$Obj_Result = @{NonNodeData = @{$Workload = @{} } }
 
-        foreach ( $Collection in $Obj_Grouped )
-        {
-            $Obj_Result.NonNodeData.$workload += @{$Collection.Composite_Resource_Name = @() }
-            foreach ($Resource in $Collection.Resource_Objects)
-            {
-                $Obj_Result.NonNodeData.$workload.($Collection.Composite_Resource_Name) += $Resource
-            }
-        }
+	foreach ($Collection in $Obj_Grouped)
+	{
+		$exampleResourceData = $Obj_M365DataExample.NonNodeData.$Workload.$($Collection.Composite_Resource_Name)
+
+		if ($exampleResourceData -is [System.Collections.Hashtable])
+		{
+			$Obj_Result.NonNodeData.$workload.($Collection.Composite_Resource_Name) = $Collection.Resource_Objects[0]
+		}
+		else
+		{
+			$Obj_Result.NonNodeData.$workload += @{$Collection.Composite_Resource_Name = @() }
+			foreach ($Resource in $Collection.Resource_Objects)
+			{
+				$Obj_Result.NonNodeData.$workload.($Collection.Composite_Resource_Name) += $Resource
+			}
+		}
+	}
 
         #  Get All leaf nodes
         $InputNode = $Obj_Result | Get-Node
