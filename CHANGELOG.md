@@ -5,6 +5,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Updated the convert export function to:
+  - Check the schema for which type is expected for a specific resource, an array or
+    an hashtable, and uses the correct type.
+  - Generates UniqueId properties for the collections that require it.
+  - Runs a Pester test to test if the exported values are of the right type and if
+    all required properties are present.
+  - Add possibility to use PowerShell v7+, where some code is proxying requests via
+    PowerShell v5.1.
+
+### Fixed
+
+- Fixed issue in the Test function where DateTime objects are stored in string
+  format, but the Test really checks for the DateTime type. Now testing if the
+  string is in a correct DateTime format.
+
 ## [0.4.6] - 2025-03-18
 
 ### Added

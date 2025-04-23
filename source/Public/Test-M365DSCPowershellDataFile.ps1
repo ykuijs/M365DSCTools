@@ -359,7 +359,14 @@ function Test-M365DSCPowershellDataFile
                     # Type Validation
                     if ($objRefNodeValue.type)
                     {
-                        "`$inputObject.{0} | {1}" -f $nodeObject.path , $(Pester_Type_Should_Command $objRefNodeValue.type)
+                        if ($objRefNodeValue.type -eq "DateTime")
+                        {
+                            "{{ [DateTime]`$inputObject.{0} }} | Should -Not -Throw -Because 'Should be a valid DateTime string'" -f $nodeObject.path
+                        }
+                        else
+                        {
+                            "`$inputObject.{0} | {1}" -f $nodeObject.path , $(Pester_Type_Should_Command $objRefNodeValue.type)
+                        }
                     }
 
                     # ValidationSet Validation
@@ -424,15 +431,13 @@ function Test-M365DSCPowershellDataFile
         $pathM365DataExample = Join-Path -Path ($Module.path | Split-Path) -ChildPath 'M365ConfigurationDataExample.psd1'
         $objM365DataExample = Import-PSDataFile -path $pathM365DataExample.ToString()
 
-        ShowElapsed | Write-Log -Debug
-
         'Create Hashtables for reference data ' | Write-Log
         [hashtable]$ht = @{}
         [hashtable]$htRequired = @{}
-        $nodeObject = $inputObject | Get-ChildNode
-        foreach ($node in $nodeObject)
+        $nodeObjects = $inputObject | Get-ChildNode
+        foreach ($nodeObject in $nodeObjects)
         {
-            foreach ($node in $($node | Get-ChildNode))
+            foreach ($node in $($nodeObject | Get-ChildNode))
             {
                 # Create Hashtabel Exampledata
                 $objM365DataExample | Get-node("$($node.path)") | Get-ChildNode -Recurse -IncludeSelf | ForEach-Object {
@@ -475,8 +480,6 @@ function Test-M365DSCPowershellDataFile
             }
         }
 
-        ShowElapsed | Write-Log -Debug
-
         'Create pester rules' | Write-Log
 
         $pesterConfig = @(
@@ -517,8 +520,6 @@ function Test-M365DSCPowershellDataFile
             }
             '}'
         )
-
-        ShowElapsed | Write-Log -Debug
 
         # Remove empty lines from the $pesterConfig variable
         $pesterConfig = $pesterConfig | Where-Object { $_.Trim() -ne '' }
@@ -584,7 +585,5 @@ function Test-M365DSCPowershellDataFile
             }
             'Pester[{0}]  Tests:{1}  Passed:{2}  Failed:{3} ' -f $pesterResult.version, $pesterResult.TotalCount, $pesterResult.PassedCount, $pesterResult.FailedCount | Write-Log @splat
         }
-
-        ShowElapsed | Write-Log -Debug
     }
 }
