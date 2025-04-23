@@ -359,7 +359,14 @@ function Test-M365DSCPowershellDataFile
                     # Type Validation
                     if ($objRefNodeValue.type)
                     {
-                        "`$inputObject.{0} | {1}" -f $nodeObject.path , $(Pester_Type_Should_Command $objRefNodeValue.type)
+                        if ($objRefNodeValue.type -eq "DateTime")
+                        {
+                            "{{ [DateTime]`$inputObject.{0} }} | Should -Not -Throw -Because 'Should be a valid DateTime string'" -f $nodeObject.path
+                        }
+                        else
+                        {
+                            "`$inputObject.{0} | {1}" -f $nodeObject.path , $(Pester_Type_Should_Command $objRefNodeValue.type)
+                        }
                     }
 
                     # ValidationSet Validation
@@ -427,10 +434,10 @@ function Test-M365DSCPowershellDataFile
         'Create Hashtables for reference data ' | Write-Log
         [hashtable]$ht = @{}
         [hashtable]$htRequired = @{}
-        $nodeObject = $inputObject | Get-ChildNode
-        foreach ($node in $nodeObject)
+        $nodeObjects = $inputObject | Get-ChildNode
+        foreach ($nodeObject in $nodeObjects)
         {
-            foreach ($node in $($node | Get-ChildNode))
+            foreach ($node in $($nodeObject | Get-ChildNode))
             {
                 # Create Hashtabel Exampledata
                 $objM365DataExample | Get-node("$($node.path)") | Get-ChildNode -Recurse -IncludeSelf | ForEach-Object {

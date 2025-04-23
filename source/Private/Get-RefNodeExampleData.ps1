@@ -37,25 +37,33 @@ function Get-RefNodeExampleData
         {
             if ($Node.GetType().FullName -eq 'PSLeafNode')
             {
-                $ArrayResult = $Result.split('|').foreach{ $_.trim() }
-                $LeafNode = @{}
-                if ( $ArrayResult[0])
+                if ($Result -is [System.String])
                 {
-                    $LeafNode.add('Type', $ArrayResult[0])
+                    $ArrayResult = $Result.Split('|').ForEach{ $_.Trim() }
+                    $LeafNode = @{}
+                    if ( $ArrayResult[0])
+                    {
+                        $LeafNode.Add('Type', $ArrayResult[0])
+                    }
+                    if ( $ArrayResult[1])
+                    {
+                        $LeafNode.Add('Required', $ArrayResult[1])
+                    }
+                    if ( $ArrayResult[2])
+                    {
+                        $LeafNode.Add('Description', $ArrayResult[2])
+                    }
+                    if ( $ArrayResult[3])
+                    {
+                        $LeafNode.Add('ValidateSet', "'" + ( $ArrayResult[3] -Replace '\s*\/\s*', "', '") + "'"  )
+                    }
+                    return $LeafNode
                 }
-                if ( $ArrayResult[1])
+                else
                 {
-                    $LeafNode.add('Required', $ArrayResult[1])
+                    Write-Warning "No data found for path: $($Node.Path)"
+                    return $null
                 }
-                if ( $ArrayResult[2])
-                {
-                    $LeafNode.add('Description', $ArrayResult[2])
-                }
-                if ( $ArrayResult[3])
-                {
-                    $LeafNode.add('ValidateSet', "'" + ( $ArrayResult[3] -Replace '\s*\/\s*', "', '") + "'"  )
-                }
-                return $LeafNode
             }
             else
             {
