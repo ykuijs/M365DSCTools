@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Generates UniqueId properties for the collections that require it.
   - Runs a Pester test to test if the exported values are of the right type and if
     all required properties are present.
+  - Add possibility to use PowerShell v7+, where some code is proxying requests via
+    PowerShell v5.1.
 
 ### Fixed
 
