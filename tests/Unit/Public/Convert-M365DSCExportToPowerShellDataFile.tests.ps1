@@ -208,7 +208,12 @@ MyConfig -ConfigurationData .\ConfigurationData.psd1
                 Result = 'Passed'
             }
         }
-        Mock -CommandName Get-Module -MockWith { return @{ Path = 'C:\Temp\module.psd1' } }
+        Mock -CommandName Get-Module -MockWith {
+            return @{
+                Path = 'C:\Temp\module.psd1'
+                Version = [Version]'10.0.0.0'
+            }
+        }
         Mock -CommandName Import-PSDataFile -MockWith {
             return @{
                 NonNodeData = @{
