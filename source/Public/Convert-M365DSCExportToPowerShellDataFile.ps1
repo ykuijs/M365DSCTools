@@ -119,7 +119,33 @@ function Convert-M365DSCExportToPowerShellDataFile
 
     process
     {
-        '--- Create composite config for M365 DSC ---' | Write-Log
+        # Placed this code here instead of the begin block to avoid issues breaking out of the begin block.
+        '--- Checking Prerequisites ---' | Write-Log
+        '- Checking Pester' | Write-Log
+        $PesterModule = Get-Module Pester -ListAvailable | Sort-Object -Property Version | Select-Object -Last 1
+        if ($null -eq $PesterModule)
+        {
+            'Pester module not found. Please install Pester!' | Write-Log -Failure
+            return
+        }
+        else
+        {
+            if ($PesterModule.Version -lt [Version]'5.7.1')
+            {
+                'Pester version is lower than 5.7.1. Please update Pester!' | Write-Log -Failure
+                return
+            }
+        }
+
+        '- Checking M365DSC.CompositeResources' | Write-Log
+        $M365DSCCRModule = Get-Module -ListAvailable M365DSC.CompositeResources | Sort-Object -Property Version | Select-Object -Last 1
+        if ($null -eq $M365DSCCRModule)
+        {
+            'M365DSC.CompositeResources module not found. Please install M365DSC.CompositeResources!' | Write-Log -Failure
+            return
+        }
+
+        '--- Create composite config for M365DSC ---' | Write-Log
         'Workload     : {0}' -f $Workload | Write-Log
         'Resourcefile : {0}' -f $SourceFile | Write-Log
         'ResultFolder : {0}' -f $ResultFile | Write-Log
@@ -128,6 +154,20 @@ function Convert-M365DSCExportToPowerShellDataFile
         {
             Write-Error "Cannot find file specified in parameter Source: $SourceFile,. Please make sure the file exists!"
             return
+        }
+
+        if (Test-Path -Path $ResultFile)
+        {
+            "File '$ResultFile' already exists. File will be overwritten!" | Write-Log -Warning
+        }
+        else
+        {
+            $ParentPath = Split-Path -Path $ResultFile
+            if ((Test-Path -Path $ParentPath) -eq $false)
+            {
+                "Specified path '$ParentPath' in ResultFile does not exist. Creating!" | Write-Log
+                New-Item -Path $ParentPath -ItemType Directory -Force
+            }
         }
 
         $fileContent = Get-Content $SourceFile -Raw
@@ -148,7 +188,7 @@ function Convert-M365DSCExportToPowerShellDataFile
         'Converting read data into object' | Write-Log
         if ($PSVersionTable.PSVersion -gt [Version]"7.0.0.0")
         {
-            '- Using PowerShell v7+, proxying conversion via PowerShell v5.1' | Write-Log
+            '** Using PowerShell v7+, proxying conversion via PowerShell v5.1 **' | Write-Log
             [Array]$parsedContent = Start-Job -ScriptBlock {
                 [Array]$parsedContent = ConvertTo-DSCObject -Content $args[0]
                 return $parsedContent
@@ -156,7 +196,7 @@ function Convert-M365DSCExportToPowerShellDataFile
         }
         else
         {
-            '- Using PowerShell v5.1' | Write-Log
+            '** Using PowerShell v5.1 **' | Write-Log
             [Array]$parsedContent = ConvertTo-DSCObject -Content $fileContent
         }
         $Obj_Export = $parsedContent.ForEach{ $_ | ConvertFrom-HashTable }
@@ -167,12 +207,6 @@ function Convert-M365DSCExportToPowerShellDataFile
 
         # Load Example data from module M365DSC.CompositeResources
         'Looking for Example Data File' | Write-Log
-        $M365DSCCRModule = Get-Module -ListAvailable M365DSC.CompositeResources | Sort-Object -Property Version | Select-Object -Last 1
-        if ($null -eq $M365DSCCRModule)
-        {
-            "Could not find module M365DSC.CompositeResources! Exiting!" | Write-Log -Failure
-            return
-        }
         $Obj_M365DataExample = Import-PSDataFile -Path (Join-Path -Path ($M365DSCCRModule.Path | Split-Path) -ChildPath 'M365ConfigurationDataExample.psd1').ToString()
 
         'Processing exported resources' | Write-Log
@@ -267,7 +301,9 @@ function Convert-M365DSCExportToPowerShellDataFile
             $counter = 1
             foreach ($obj in $node.Value)
             {
-            if ($obj.ContainsKey('UniqueId') -eq $false)
+                if ($obj.ContainsKey('UniqueId') -eq $false -and `
+                    $obj.ContainsKey('Identity') -eq $false -and `
+                    $obj.ContainsKey('Id') -eq $false)
                 {
                     $uniqueName = "{0}_{1}" -f $node.Name,$counter
                     $obj.UniqueId = $uniqueName

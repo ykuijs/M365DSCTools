@@ -10,7 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the convert export function to:
   - Check the schema for which type is expected for a specific resource, an array or
     an hashtable, and uses the correct type.
-  - Generates UniqueId properties for the collections that require it.
+  - Generates UniqueId properties for the collections that require it. For DSC resources,
+    this includes the resource instance name and for subproperties a counter is used.
   - Runs a Pester test to test if the exported values are of the right type and if
     all required properties are present.
   - Add possibility to use PowerShell v7+, where some code is proxying requests via
