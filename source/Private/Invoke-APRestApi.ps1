@@ -70,7 +70,39 @@ function Invoke-APRestApi
             $params.Body = $Body
         }
 
-        $result = Invoke-RestMethod @params
+        if ($Uri -match "/_apis/graph/users?")
+        {
+            $result = $null
+            $allValues = @()
+            $totalCount = 0
+            do
+            {
+                $response = Invoke-WebRequest @params -UseBasicParsing
+                $continuationToken = $response.Headers."X-MS-ContinuationToken"
+                $responseValue = $response.Content | ConvertFrom-Json
+                if ($responseValue.value)
+                {
+                    $allValues += $responseValue.value
+                    $totalCount += $responseValue.count
+                }
+                if ($continuationToken)
+                {
+                    $params.Uri = "$Uri&continuationToken=$continuationToken"
+                }
+            } while ($continuationToken)
+
+            if ($allValues.Count -gt 0)
+            {
+                $result = [PSCustomObject]@{
+                    count = $totalCount
+                    value = $allValues
+                }
+            }
+        }
+        else
+        {
+            $result = Invoke-RestMethod @params
+        }
         return $result
     }
     catch
