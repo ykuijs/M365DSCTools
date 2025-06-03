@@ -26,7 +26,7 @@ AfterAll {
 
 Describe Copy-Object {
     BeforeAll {
-        $hashtable = @{
+        $exampleData = @{
             Item1 = 'Value1'
             Item2 = 'Value2'
             Item3 = @{
@@ -42,7 +42,8 @@ Describe Copy-Object {
 
     Context 'Test function Copy-Object' {
         It 'Should copy hashtables successfully' {
-            $newObject = Copy-Object -Object $hashtable
+            Remove-Item Alias:\Copy-Object
+            $newObject = Copy-Object -Object $exampleData
 
             $newObject | Should -BeOfType [System.Collections.Hashtable]
             $newObject | Should -Not -Be $hashtable
