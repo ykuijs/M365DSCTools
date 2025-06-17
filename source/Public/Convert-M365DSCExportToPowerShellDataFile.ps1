@@ -55,7 +55,7 @@ function Convert-M365DSCExportToPowerShellDataFile
                     'Fabric', 'Intune', 'Office365',
                     'OneDrive', 'Planner', 'PowerPlatform',
                     'SecurityCompliance', 'Sentinel', 'ServicesHub',
-                    'SharePoint', 'Teams')]
+                    'SharePoint', 'Teams', 'Viva')]
         $Workload,
 
         [Parameter(Mandatory = $true, ValueFromPipeline = $True)]
@@ -112,7 +112,7 @@ function Convert-M365DSCExportToPowerShellDataFile
                         $NewObject[[object] $entry.Key] = $entry.Value
                     }
                 }
-                [pscustomobject] $NewObject
+                [PSCustomObject] $NewObject
             }
         }
     }
@@ -146,9 +146,9 @@ function Convert-M365DSCExportToPowerShellDataFile
         }
 
         '--- Create composite config for M365DSC ---' | Write-Log
-        'Workload     : {0}' -f $Workload | Write-Log
-        'Resourcefile : {0}' -f $SourceFile | Write-Log
-        'ResultFolder : {0}' -f $ResultFile | Write-Log
+        'Workload    : {0}' -f $Workload | Write-Log
+        'SourceFile  : {0}' -f $SourceFile | Write-Log
+        'ResultFile  : {0}' -f $ResultFile | Write-Log
 
         if ((Test-Path -Path $SourceFile) -eq $false)
         {

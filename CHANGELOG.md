@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed issue in the Test function where DateTime objects are stored in string
   format, but the Test really checks for the DateTime type. Now testing if the
   string is in a correct DateTime format.
+- Added support for ObjectGraphTools v0.3, which contains some important changes.
 
 ## [0.4.6] - 2025-03-18
 

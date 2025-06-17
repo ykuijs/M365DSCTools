@@ -54,8 +54,8 @@ PowerShellVersion = '5.0'
 RequiredModules = @(
     @{
         ModuleName     = 'ObjectGraphTools'
-        ModuleVersion  = '0.2.0'
-        MaximumVersion = '0.2.99'
+        ModuleVersion  = '0.3.0'
+        MaximumVersion = '0.3.99'
     }
     @{
         ModuleName    = 'powershell-yaml'

@@ -115,6 +115,7 @@ Describe Test-M365DSCPowershellDataFile {
             $result = Test-M365DSCPowershellDataFile -Test TypeValue -InputObject $Object -PesterVerbosity None -PesterOutputObject
             $result.Result | Should -Be 'Failed'
         }
+
         It 'Should successfully test of the inputted object - Testing Required' {
             $Object = @{
                 NonNodeData = @{

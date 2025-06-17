@@ -8,7 +8,7 @@ function Get-RefNodeExampleData
   This function retrieves the details of the item from the referenced example data.
 
  .Parameter Node
-  The Leadnode that needs to be retrieved
+  The Leafnode that needs to be retrieved
 
  .Parameter ReferenceObject
   The ReferenceObject that contains the example data
