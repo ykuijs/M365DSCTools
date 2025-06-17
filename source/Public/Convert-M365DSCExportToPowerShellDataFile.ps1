@@ -55,7 +55,7 @@ function Convert-M365DSCExportToPowerShellDataFile
                     'Fabric', 'Intune', 'Office365',
                     'OneDrive', 'Planner', 'PowerPlatform',
                     'SecurityCompliance', 'Sentinel', 'ServicesHub',
-                    'SharePoint', 'Teams')]
+                    'SharePoint', 'Teams', 'Viva')]
         $Workload,
 
         [Parameter(Mandatory = $true, ValueFromPipeline = $True)]

@@ -16,10 +16,5 @@
     'Sampler.GitHubTasks' = 'latest'
     'PowerShellGet'       = 'latest'
     'powershell-yaml'     = 'latest'
-    'ObjectGraphTools'    = @{
-        RequiredVersion = '0.3.2-Preview3' # Make sure you also update the module manifest with the correct version ranges
-        Parameters = @{
-            AllowPrerelease = $true
-        }
-    }
+    'ObjectGraphTools'    = '0.3.2'
 }

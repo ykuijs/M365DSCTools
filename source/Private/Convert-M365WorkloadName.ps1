@@ -16,6 +16,7 @@ $DSC_Workloads = @{
     'ServicesHub'        = 'SH'
     'SharePoint'         = 'SPO'
     'Teams'              = 'Teams'
+    'Viva'               = 'Viva'
 }
 
 function Convert-M365WorkloadName
