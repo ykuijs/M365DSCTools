@@ -209,10 +209,10 @@ function Test-M365DSCPowershellDataFile
             try
             {
                 switch ($type) {
-                    'SInt32' { return "Should -Match '^\d+$' -Because 'Must be a positive Integer'" }
-                    'SInt64' { return "Should -Match '^\d+$' -Because 'Must be a positive Integer'" }
-                    'UInt32' { return "Should -BeOfType 'Int'" }
-                    'UInt64' { return "Should -BeOfType 'Int'" }
+                    'SInt32' { return "Should -BeOfType 'Int'" }
+                    'SInt64' { return "Should -BeOfType 'Int'" }
+                    'UInt32' { return "Should -Match '^\d+$' -Because 'Must be a positive Integer'" }
+                    'UInt64' { return "Should -Match '^\d+$' -Because 'Must be a positive Integer'" }
                     'Guid' { return "Test-IsGuid | Should -Be 'True'" }
                     default { return "Should -BeOfType '$type'" }
                 }
